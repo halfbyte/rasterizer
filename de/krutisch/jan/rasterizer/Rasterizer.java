@@ -20,6 +20,15 @@ package de.krutisch.jan.rasterizer;
  * $Id$
  * 
  * $Log$
+ * Revision 1.3  2004/05/28 23:42:38  halfbyte
+ * This is Version 0.3
+ * Changelog:
+ * 
+ * - Parameter -d for dotSize
+ * - Parameter -s for pageSize (A4,A3,LETTER,LEGAL)
+ * - Enabled Parameter -l for Landscape pages
+ * - Automatic scaling to page size (creates ugly margins sometimes)
+ *
  * Revision 1.2  2004/05/23 18:58:20  halfbyte
  * Cleanup. This is Version 0.2. Same features as 0.1 but cleaner code.
  *
@@ -38,8 +47,9 @@ import gnu.getopt.*;
 
 public class Rasterizer {
 
-	static final int ROWS_PER_PAGE = 80;
-	static final int COLS_PER_PAGE = 56;
+	private int rowsPerPage = 80;
+	private int colsPerPage = 56;
+	private float dotSize = 10f;
 	
 	private String inputFilename = new String("");
 	private String outputFilename = new String("");
@@ -48,6 +58,8 @@ public class Rasterizer {
 	
 	private boolean landscape = false;
 	private boolean verbose = false;
+	
+	private com.lowagie.text.Rectangle pageSize = null;
 
 
 	// 	
@@ -55,7 +67,9 @@ public class Rasterizer {
 		
 		System.out.println("Rasterizer V0.2 (c) 2004 JanKrutisch");
 		// parse options using getOpt
+		pageSize = null;
 		if (parseOptions(args) == false) return;
+		
 		// get Time for performance measurement
 		long startTime = new Date().getTime();
 		try {
@@ -78,8 +92,20 @@ public class Rasterizer {
 			 *
 			*/
 			
-			BufferedImage dimg = scaleImage(img,xPages);
 			
+			if (pageSize == null) {
+				pageSize = PageSize.A4;
+			}
+			if (landscape) pageSize = pageSize.rotate();
+			
+			colsPerPage = (int)((pageSize.width()-72) / dotSize);
+			rowsPerPage = (int)((pageSize.height()-72) / dotSize);
+			
+			verboseOut("cols_per_page: " + colsPerPage);
+			verboseOut("rows_per_page: " + rowsPerPage);
+			
+			BufferedImage dimg = scaleImage(img,xPages);
+			//saveImage("test.jpg",dimg);
 			verboseOut("-Converting-");
 			
 			// Map image global function.
@@ -97,6 +123,30 @@ public class Rasterizer {
 		
 	}
 
+
+	private void setDotSize(String p) {
+		
+		try {
+			dotSize = Float.parseFloat(p);
+		} catch(Exception e) {
+			System.out.println("Illegal Dot Size. Defaulting to 10pt");
+			dotSize = 10f;
+		}
+	}
+
+	private void setPageSize(String p) {
+		if ("A4".equals(p)) {
+			pageSize = PageSize.A4;
+		} else if ("A3".equals(p)) {
+			pageSize = PageSize.A3;
+		} else if ("LETTER".equals(p)) {
+			pageSize = PageSize.LETTER;
+		} else if ("LEGAL".equals(p)) {
+					pageSize = PageSize.LEGAL;
+		}
+		if (pageSize == null) pageSize = PageSize.A4;
+	}
+
 	/*
 	 * Image scaling method.
 	 */
@@ -105,7 +155,7 @@ public class Rasterizer {
 		
 		// calculate new width and height
 		
-		int w2 = COLS_PER_PAGE * xPages;
+		int w2 = colsPerPage * xPages;
 		// scaling by keeping aspect ratio intact.
 		int h2 = (int)((float)img.getHeight()/((float)img.getWidth()/(float)w2));
 
@@ -136,10 +186,11 @@ public class Rasterizer {
 			// needs to change when the user should be able to
 			// specify both X and Y pages 
 						
-			int yPages = (int)Math.ceil((double)dimg.getHeight() / (double)ROWS_PER_PAGE);	
+			int yPages = (int)Math.ceil((double)dimg.getHeight() / (double)rowsPerPage);	
 
+			
 			// Get iText document
-			Document document = new Document();
+			Document document = new Document(pageSize);
 			// Get Writer. Can cause filenotfound exception 
 			// if document is in use (by, e.g. acrobat reader)
 			
@@ -191,11 +242,11 @@ public class Rasterizer {
 	private void mapPage(PdfContentByte cb, BufferedImage img, Document document, int xPage, int yPage) {
 		
 		ColorModel cm = img.getColorModel();
-		int xStart = xPage * COLS_PER_PAGE;
-		int yStart = yPage * ROWS_PER_PAGE;
-		int xEnd = (xPage+1) * COLS_PER_PAGE;
-		if (xEnd >= (img.getWidth()-1)) xEnd = (img.getWidth()-1);
-		int yEnd = (yPage+1) * ROWS_PER_PAGE;
+		int xStart = xPage * colsPerPage;
+		int yStart = yPage * rowsPerPage;
+		int xEnd = (xPage+1) * colsPerPage;
+		if (xEnd > (img.getWidth())) xEnd = (img.getWidth());
+		int yEnd = (yPage+1) * rowsPerPage;
 		if (yEnd >= (img.getHeight()-1)) yEnd = (img.getHeight()-1);
 		//System.out.println("xStart:" + xStart + " yStart:" + yStart + " xEnd:" + xEnd + " yEnd:" + yEnd);
 
@@ -229,6 +280,8 @@ public class Rasterizer {
 				
 				
 				float r = (float)Math.sqrt(value / Math.PI);
+				r /= 10f;
+				r *= dotSize;
 				
 				// if radius is >0 then draw circle. should be changed
 				// to allow different shapes.
@@ -236,7 +289,7 @@ public class Rasterizer {
 					// Set color
 					cb.setRGBColorFillF(0f,0f,0f);
 					// create circle path
-					cb.circle((10*x)+20,820-10*y,r);
+					cb.circle((dotSize*x)+document.left(),document.top()-dotSize*y,r);
 					// fill path
 					cb.fill();
 				}
@@ -249,7 +302,7 @@ public class Rasterizer {
 	 * Parse Commandline Options using GNU Getopt.
 	 */	
 	private boolean parseOptions(String[] args) {
-		Getopt g = new Getopt("Rasterizer", args, "p:lvh");
+		Getopt g = new Getopt("Rasterizer", args, "p:s:d:lvh");
 		int c;
 		String arg;
 		while((c= g.getopt()) != -1) {
@@ -266,6 +319,14 @@ public class Rasterizer {
 					// PRINT HELP
 					printHelp();
 					return false;
+				case 's':
+					// Page size
+					setPageSize(g.getOptarg());
+				break;
+				case 'd':
+					// Page size
+					setDotSize(g.getOptarg());
+				break;
 				case 'p':
 					// NUMBER OF X-PAGES
 					arg = g.getOptarg();
@@ -313,7 +374,8 @@ public class Rasterizer {
 	private void printHelp() {
 		System.out.println("Usage: java Rasterizer [-p pages] [-l] [-h] [-v] inputfile [outputfile]");
 		System.out.println("-p : Number of horizontal pages (vertical will be chosen according to aspect ratio of source image)");
-		System.out.println("-l : Use Pages in Landscape (not implemented)");
+		System.out.println("-l : Use Pages in Landscape");
+		System.out.println("-s : Paper Size. Allowed Values: A4, A3, LETTER, LEGAL");
 		System.out.println("-h : The stuff you are reading right now. No Action.");
 		System.out.println("-v : Verbose output");
 		System.out.println("inputfile  : Input file (.jpeg, .gif, .png)");
