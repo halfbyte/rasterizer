@@ -20,6 +20,9 @@ package de.krutisch.jan.rasterizer;
  * $Id$
  * 
  * $Log$
+ * Revision 1.4  2004/05/28 23:43:50  halfbyte
+ * 0.3 versioning
+ *
  * Revision 1.3  2004/05/28 23:42:38  halfbyte
  * This is Version 0.3
  * Changelog:
@@ -65,7 +68,7 @@ public class Rasterizer {
 	// 	
 	public Rasterizer(String[] args) {
 		
-		System.out.println("Rasterizer V0.2 (c) 2004 JanKrutisch");
+		System.out.println("Rasterizer V0.3 (c) 2004 JanKrutisch");
 		// parse options using getOpt
 		pageSize = null;
 		if (parseOptions(args) == false) return;
