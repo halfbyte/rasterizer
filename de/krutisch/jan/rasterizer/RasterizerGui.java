@@ -44,7 +44,7 @@ public class RasterizerGui implements ActionListener{
 	
 	RasterizerGui() {
 		// loading locale
-		guires = ResourceBundle.getBundle("guiresource",Locale.GERMANY);
+		guires = ResourceBundle.getBundle("guiresource");
 		arrayRes = new PropertyResourceArrayBundle(guires);
 		
 		window = new JFrame(guires.getString("windowTitle"));
