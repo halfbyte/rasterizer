@@ -312,7 +312,7 @@ public class RasterizerGui implements ActionListener{
 	
     private static void createAndShowGUI() {
         //Make sure we have nice window decorations.
-        JFrame.setDefaultLookAndFeelDecorated(true);
+        //JFrame.setDefaultLookAndFeelDecorated(true);
         //Create and set up the window.
         RasterizerGui app = new RasterizerGui();
         
