@@ -55,6 +55,7 @@ public class RasterizerGui implements ActionListener{
 
 		imageChooser = new JFileChooser();
 		imageChooser.addChoosableFileFilter(new ImageFileFilter());
+		imageChooser.setAccessory(new ImageFileAccessory(imageChooser));
 		pdfChooser = new JFileChooser();
 		pdfChooser.addChoosableFileFilter(new PdfFileFilter());
 
