@@ -26,6 +26,7 @@ import java.awt.event.*;
 import java.io.File;
 import com.lowagie.text.PageSize;
 import java.util.*;
+import java.net.URL;
 
 
 public class RasterizerGui implements ActionListener{
@@ -65,11 +66,15 @@ public class RasterizerGui implements ActionListener{
 	
 	RasterizerGui() {
 		// loading locale
-		guires = ResourceBundle.getBundle("guiresource");
+		guires = ResourceBundle.getBundle("de.krutisch.jan.rasterizer.locale.guiresource");
 		arrayRes = new PropertyResourceArrayBundle(guires);
+		
+		URL imageURL = RasterizerGui.class.getResource("images/rasterizer.gif");
 		
 		window = new JFrame(guires.getString("windowTitle"));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ImageIcon icon = new ImageIcon(imageURL);
+        window.setIconImage(icon.getImage());
         
         Component contents = createComponents();
         window.getContentPane().add(contents, BorderLayout.CENTER);
