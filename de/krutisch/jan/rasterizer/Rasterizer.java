@@ -20,6 +20,9 @@ package de.krutisch.jan.rasterizer;
  * $Id$
  * 
  * $Log$
+ * Revision 1.9  2004/09/11 19:26:58  halfbyte
+ * GUI working prototype
+ *
  * Revision 1.8  2004/09/11 12:39:20  halfbyte
  * Reimplemented Landscape (was missing)
  *
@@ -56,22 +59,9 @@ package de.krutisch.jan.rasterizer;
 
 import gnu.getopt.Getopt;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Date;
-
-import javax.imageio.ImageIO;
-
-import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfWriter;
+
 
 public class Rasterizer {
 

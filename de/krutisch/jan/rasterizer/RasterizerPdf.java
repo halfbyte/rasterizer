@@ -6,9 +6,7 @@
  */
 package de.krutisch.jan.rasterizer;
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.io.File;
+import javax.swing.JProgressBar;
 import java.io.FileOutputStream;
 
 import com.lowagie.text.Document;
@@ -36,6 +34,8 @@ public class RasterizerPdf {
 	static boolean landscape;
 	public static final int NOCOLOR=0,SIMPLECOLOR=1;
 	public static final int NOCROPMARKS=0,CROPMARKS=1,ALLCROPMARKS=2;
+	static JProgressBar progressBar;
+	
 	
 	RasterizerPdf() {
 		file =null;
@@ -53,6 +53,10 @@ public class RasterizerPdf {
 		return me;
 	}
 
+	public void setProgressBar(JProgressBar pb) {
+		progressBar = pb; 
+	}
+	
 	public boolean setOutputFile(String filename) {
 		try {
 			file = new FileOutputStream(filename);
@@ -243,6 +247,10 @@ public class RasterizerPdf {
 					document.add(new Paragraph(""));
 					// map one page.
 					logger.log(EventLogger.VERBOSE,"Mapping Page " + (xPage +  (yPage*pages) + 1)  );
+					if (progressBar != null) {
+						progressBar.setValue(100*(xPage +  (yPage*pages) + 1) / (pages * yPages));
+						progressBar.setString("Mapping Page " + (xPage +  (yPage*pages) + 1));
+					}
 					mapPage(cb,ri,document,xPage,yPage,colsPerPage, rowsPerPage);
 					// new page					
 					document.newPage();
@@ -250,6 +258,11 @@ public class RasterizerPdf {
 				// new Page
 				document.newPage();
 			}
+			if (progressBar != null) {
+				progressBar.setValue(100);
+				progressBar.setString("finished.");
+			}
+
 			document.close();
 		
 		} catch (Exception e) {
