@@ -5,8 +5,19 @@ package de.krutisch.jan.rasterizer;
  *
  * This is the Commandline version.
  * 
- * (c) 2004 Jan Krutisch (http://jan.krutisch.de)
- * This program is released under the GPL
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  * The Great Rasterizer uses the following libraries: 
  * (apart from the obvious JRE SL)
@@ -19,44 +30,6 @@ package de.krutisch.jan.rasterizer;
  * 
  * $Id$
  * 
- * $Log$
- * Revision 1.1  2005/02/04 21:40:58  halfbyte
- * moving to src
- *
- * Revision 1.9  2004/09/11 19:26:58  halfbyte
- * GUI working prototype
- *
- * Revision 1.8  2004/09/11 12:39:20  halfbyte
- * Reimplemented Landscape (was missing)
- *
- * Revision 1.7  2004/09/11 12:24:09  halfbyte
- * Working Phase, only CLI
- *
- * Revision 1.6  2004/09/09 18:05:36  halfbyte
- * Modified -c, now stands for experimental color support (using
- * the rasterbator approach).
- * old -c is now -m (Cropmarks)
- * This is version 0.5
- *
- * Revision 1.5  2004/06/13 00:32:10  halfbyte
- * Added -c for cropmarks. This is 0.4
- *
- * Revision 1.4  2004/05/28 23:43:50  halfbyte
- * 0.3 versioning
- *
- * Revision 1.3  2004/05/28 23:42:38  halfbyte
- * This is Version 0.3
- * Changelog:
- * 
- * - Parameter -d for dotSize
- * - Parameter -s for pageSize (A4,A3,LETTER,LEGAL)
- * - Enabled Parameter -l for Landscape pages
- * - Automatic scaling to page size (creates ugly margins sometimes)
- *
- * Revision 1.2  2004/05/23 18:58:20  halfbyte
- * Cleanup. This is Version 0.2. Same features as 0.1 but cleaner code.
- *
- *  
  * 
  */
 

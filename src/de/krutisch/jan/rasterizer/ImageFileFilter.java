@@ -2,15 +2,29 @@ package de.krutisch.jan.rasterizer;
 /*
  * Created on Sep 13, 2004
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * $Id$
+ * 
  */
 import java.io.File;
+import java.util.HashSet;
+
 import javax.swing.filechooser.*;
+import javax.imageio.ImageIO;
 
 /* ImageFilter.java is a 1.4 example used by FileChooserDemo2.java. */
 public class ImageFileFilter extends FileFilter {
-
+	
+	HashSet set;
+	
+	ImageFileFilter() {
+		String[] formatNames = ImageIO.getReaderFormatNames();
+	    this.set = new HashSet();
+	    for (int i=0; i<formatNames.length; i++) {
+	    	String name = formatNames[i].toLowerCase();
+	    	this.set.add(name);
+	    }
+	}
+	
     //Accept all directories and all gif, jpg, tiff, or png files.
     public boolean accept(File f) {
         if (f.isDirectory()) {
@@ -24,19 +38,10 @@ public class ImageFileFilter extends FileFilter {
         }
          
         if (extension != null) {
-            if (extension.equals("tiff") ||
-            		
-                extension.equals("tif") ||
-                extension.equals("gif") ||
-                extension.equals("jpeg") ||
-                extension.equals("jpg") ||
-                extension.equals("png")) {
-                    return true;
-            } else {
-                return false;
-            }
+        	if (this.set.contains(extension)) {
+        		return true;
+        	}
         }
-
         return false;
     }
 

@@ -1,16 +1,14 @@
 /*
  * Created on Sep 11, 2004
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * $Id$
+ * 
  */
 package de.krutisch.jan.rasterizer;
 
 /**
  * @author jan
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public abstract class EventLogger {
 	static EventLogger me;

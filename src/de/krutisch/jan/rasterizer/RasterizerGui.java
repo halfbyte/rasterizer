@@ -202,7 +202,7 @@ public class RasterizerGui implements ActionListener{
         overallProgressBar.setString("");
         overallProgressBar.setEnabled(false);
         pane.add(overallProgressBar);
-        JLabel versionLabel = new JLabel("Revision info:"+"$Revision$");
+        JLabel versionLabel = new JLabel("$Revision$".replace('$',' '));
         versionLabel.setAlignmentX(0.5f);
         pane.add(versionLabel);
 

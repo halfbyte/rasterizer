@@ -1,3 +1,10 @@
+/*
+ *
+ * $Id$
+ * 
+ */
+
+
 package de.krutisch.jan.rasterizer;
 import javax.swing.*;
 import java.beans.*;
