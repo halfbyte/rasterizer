@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<project name="ConsoleApp" default="compile" basedir=".">
+	<property name="src" value="src"/>
+	<property name="bin" value="bin"/>
+	<property name="jardest" value="."/>
+	<property name="res" value="res"/>
+	<property name="gpl" value="."/>
+	<property name="dist" value="dist"/>	
+	<property name="readme" value="readme"/>
+	<property name="guijar" value="rasterizergui.jar"/>
+	<property name="guijar_nosrc" value="rasterizergui_winexe.jar"/>
+	<property name="clijar" value="rasterizer.jar"/>
+	
+	<property name="l4j" value="l4j"/>
+	<property name="l4jexe" value="d:/programming/launch4j/bin/launch4j.exe"/>
+	
+	
+	
+	
+	<target name="init">
+		<mkdir dir="${bin}"/>
+		<copy todir="${bin}">
+			<fileset dir="${res}"/>
+		</copy>
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${bin}"/>
+	</target>
+	<target name="jargui" depends="compile">
+		<jar destfile="${jardest}/${guijar}">
+			<fileset dir="${src}">
+			
+			</fileset>
+			<fileset dir="${bin}">
+			
+			</fileset>
+			<fileset dir="${gpl}">
+				<include name="COPYING.LIB"/>
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="de.krutisch.jan.rasterizer.RasterizerGui"/>
+			</manifest>
+		</jar>
+	</target>
+	<target name="jarguinosrc" depends="compile">
+		<jar destfile="${jardest}/rasterizergui_winexe.jar">
+			<fileset dir="${bin}">
+			
+			</fileset>
+			<fileset dir="${gpl}">
+				<include name="COPYING.LIB"/>
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="de.krutisch.jan.rasterizer.RasterizerGui"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="jarcl" depends="compile">
+		<jar destfile="${jardest}/rasterizer.jar">
+			<fileset dir="${src}">
+			
+			</fileset>
+			<fileset dir="${bin}">
+			
+			</fileset>
+			<fileset dir="${gpl}">
+				<include name="COPYING.LIB"/>
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="de.krutisch.jan.rasterizer.Rasterizer"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="dist" depends="jarcl,jargui,jarguinosrc">
+		<mkdir dir="${dist}"/>
+		<zip destfile="${dist}/rasterizer.zip">
+			<fileset dir="${jardest}">
+				<include name="${clijar}"/>
+			</fileset>
+			<fileset dir="${readme}">
+				<include name="readme.txt"/>
+			</fileset>
+			<fileset dir="${gpl}">
+				<include name="COPYING.LIB"/>
+			</fileset>
+		</zip>
+		<zip destfile="${dist}/rasterizergui.zip">
+			<fileset dir="${jardest}">
+				<include name="${guijar}"/>
+			</fileset>
+			<fileset dir="${readme}">
+				<include name="readme_gui.txt"/>
+				<include name="liesmich_gui.txt"/>
+			</fileset>
+			<fileset dir="${gpl}">
+				<include name="COPYING.LIB"/>
+			</fileset>
+		</zip>
+		<exec executable="${l4jexe}" failonerror="true">
+					<arg line="${l4j}/l4j.cfg"/>
+		</exec>
+		<zip destfile="${dist}/rasterizer_win.zip">
+			<zipfileset dir="${src}" prefix="src">
+			</zipfileset>
+			<fileset dir="${readme}">
+				<include name="readme_exe.txt"/>
+				<include name="liesmich_exe.txt"/>
+			</fileset>
+			<fileset dir="${dist}">
+				<include name="rasterizergui.exe"/>
+			</fileset>
+			<fileset dir="${gpl}">
+				<include name="COPYING.LIB"/>
+			</fileset>
+		</zip>
+		<delete file="${dist}/rasterizergui.exe"></delete>
+	</target>
+</project>
