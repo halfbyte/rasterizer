@@ -16,9 +16,6 @@
 	
 	<target name="init">
 		<mkdir dir="${bin}"/>
-		<copy todir="${bin}">
-			<fileset dir="${res}"/>
-		</copy>
 	</target>
 	<target name="compile" depends="init">
 		<javac srcdir="${src}" destdir="${bin}"/>
