@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="de-de">
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Rasterizer Tutorial
+Deutsch</title>
+</head>
+<body>
+<h1 class="">Das
+Rasterizer-Tutorial f&uuml;r SOS-Gucker :)</h1>
+Version 1.0 (04.02.2005)
+<h1 class=""><a name="Inhaltsverzeichnis">Inhaltsverzeichnis<br>
+</a></h1>
+<ol>
+  <li><a href="#Einleitung">Einleitung</a></li>
+  <li><a href="#Java">Java?</a></li>
+  <li><a href="#Rasterizer_installieren">Rasterizer
+herunterladen / installieren</a></li>
+  <li><a href="#Rasterizer_Starten">Rasterizer Starten</a></li>
+  <li><a href="#Dateiauswahl">Dateiauswahl</a></li>
+  <li><a href="#Einstellungen">Einstellungen</a></li>
+  <li><a href="#Rastern">Rastern</a></li>
+  <li><a href="#Montieren">Montieren</a></li>
+</ol>
+<h1 class=""><a name="Einleitung">Einleitung</a></h1>
+Nachdem jetzt doch einige Anfragen wegen dem
+Rasterizer per Mail bei
+mir eintrudeln, habe ich jetzt hier einmal versucht, eine
+m&ouml;glichst ausf&uuml;hrliche und komplette Anleitung
+f&uuml;r den Rasterizer zu schreiben, mit der auch nicht so
+technikbewanderte Menschen ein Rasterbild zum fliegen bekommen.<br>
+<br>
+Diese Einleitung bezieht sich zun&auml;chst einmal auf Windows 2000
+oder Windows XP. &Auml;ltere Windowsversionen (Me / 98) habe ich
+leider nicht mehr hier rumstehen (Hallo, wir haben 2005!), deswegen
+f&auml;llt es mir schwer, da eine komplette Anleitung zu schreiben,
+es ist auch anzunehmen, das solche Rechner vielleicht nicht ganz
+ausreichend sind f&uuml;r den Rasterizer. Allerdings habe ich ein
+paar Anmerkungen, mit denen es auch unter Windows ME oder 98 klappen
+k&ouml;nnte, in [eckige Klammern] geschrieben.&nbsp; <br>
+Eine Kurzanleitung f&uuml;r Mac OSX werde ich nachliefern. <br>
+Linux-User halte ich f&uuml;r so kompetent, das sie den Rasterizer
+auch ohne tiefergehende Anleitung zum fliegen bekommen. Sollte ich mich
+da t&auml;uschen, schreibt mir 'ne Mail.<br>
+<br>
+Falls dennoch Fragen aufkommen sollten, k&ouml;nnt Ihr ab sofort
+das <a href="http://www.rasterizer.de/forum/">Rasterizer.de-Forum</a>
+benutzen!<br>
+<br>
+[<a href="#Inhaltsverzeichnis">&lt;&lt;Zur&uuml;ck
+zum Inhaltsverzeichnis</a>]<br>
+<h1><a name="Java">Java?</a></h1>
+<a name="Java">Um den
+Rasterizer starten zu k&ouml;nnen, brauchst Du
+ein
+Java-Runtime-Environment, eine Java-Laufzeitumgebung, kurz JRE. Dies
+ist ein Programmpaket der Firma Sun, welche Deinen Computer so
+aufr&uuml;stet, dass Du Java-Programme starten kannst. Der
+Rasterizer braucht eine ziemlich neue Version des JRE, mindestens
+jedoch Version 1.4.2. <br>
+</a>
+<h2><a name="Test_ob_Java_vorhanden_ist">Test ob Java
+vorhanden ist</a></h2>
+<a name="Test_ob_Java_vorhanden_ist">Vielleicht
+hat dein Computer ja
+schon Java installiert. Das
+herauszubekommen ist relativ einfach:<br>
+<br>
+Im Startmen&uuml; gibt es einen Punkt "Ausf&uuml;hren...":<br>
+<br>
+Diesen w&auml;hlst Du aus. Es sollte sich ein Fenster
+&ouml;ffnen, in dem Du ein beliebiges Programm starten kannst:<br>
+<br>
+<img style="width: 376px; height: 198px;"
+ alt="das ausf&uuml;hren-Fenster von Windows" src="img/ausfuehren.gif"><br>
+<br>
+Dort
+gibst Du jetzt "cmd" ein und dr&uuml;ckst die Eingabetaste.
+[Hinweis f&uuml;r WindowsME oder 98-User: "cmd" durch "command"
+ersetzen, dann sollte es gehen] Es &ouml;ffnet sich ein Fenster,
+das an
+&uuml;belste DOS-Zeiten erinnert, eine sog. Kommandozeile. Dort
+kannst Du jetzt ebenfalls beliebige Programme starten. Das ganze sollte
+so &auml;hnlich aussehen wie dies hier:<br>
+<br>
+</a>
+<div
+ style="background-color: rgb(0, 0, 0); color: rgb(221, 221, 221); font-family: Courier New,mono;"><a
+ name="Test_ob_Java_vorhanden_ist"><br>
+<br>
+C:\Dokumente und Einstellungen\DeinName&gt;_<br>
+<br>
+<br>
+</a></div>
+<a name="Test_ob_Java_vorhanden_ist"><br>
+<br>
+Wir wollen ja aber nur schnell herausbekommen, ob und welche
+Java-Version auf Deinem Computer vorhanden ist. Also gibst du folgendes
+ein:<br>
+<br>
+java -version<br>
+<br>
+und dr&uuml;ckst die Eingabetaste. Im Idealfall sieht das dann so
+aus:<br>
+<br>
+</a>
+<div
+ style="background-color: rgb(0, 0, 0); color: rgb(221, 221, 221); font-family: Courier New,mono;"><a
+ name="Test_ob_Java_vorhanden_ist"><br>
+<br>
+C:\Dokumente und Einstellungen\Jan&gt;java -version<br>
+java version "1.4.2_04"<br>
+Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.2_04-b05)<br>
+Java HotSpot(TM) Client VM (build 1.4.2_04-b05, mixed mode)<br>
+C:\Dokumente und Einstellungen\Jan&gt;<br>
+<br>
+<br>
+</a></div>
+<a name="Test_ob_Java_vorhanden_ist"><br>
+Wenn das bei Dir so aussieht, ist das schlimmste eigentlich schon
+&uuml;berstanden und Du kannst bei der </a><a
+ href="#Rasterizer_installieren">Installation vom
+Rasterizer</a> weiter machen.<br>
+<br>
+Im schlimmsten Fall meldet das Programm folgendes:<br>
+<br>
+<div
+ style="background-color: rgb(0, 0, 0); color: rgb(221, 221, 221); font-family: Courier New,mono;">
+<br>
+<br>
+C:\Dokumente und Einstellungen\Jan&gt;java -version<br>
+Der Befehl "java" ist entweder falsch geschrieben oder<br>
+konnte nicht gefunden werden.<br>
+<br>
+C:\Dokumente und Einstellungen\Jan&gt;<br>
+<br>
+</div>
+<br>
+Dann ist Java nicht, oder nicht richtig installiert.<br>
+Meldet das Programm eine andere Version, so ist Vorsicht geboten:
+Version 1.5 oder 5 ist in Ordnung, Version 1.3 wird vermutlich nicht
+funktionieren (Das habe ich aber ehrlich gesagt noch nie probiert). Du
+wirst also auch eine neue Version installieren m&uuml;ssen.<br>
+<h2>Java-Download und Installation</h2>
+Diese Version bekommst Du bei <a
+ href="http://java.sun.com/j2se/1.4.2/download.html">Sun</a>.
+Auf der Webseite sieht es etwas kompliziert aus, deswegen hier mal ein
+Teil der Webseite mit 'ner Markierung, wo Du klicken musst:<br>
+<br>
+<img style="border: 2px solid ; width: 448px; height: 488px;"
+ alt="JDK/JRE-Downloadseite mit markiertem JRE-Link"
+ src="img/jre_dl.gif"><br>
+<br>
+&nbsp;Dann sollte der Download starten (wenn man Gl&uuml;ck hat
+und die Sun-Seite nicht gerade wieder einmal den Geist aufgibt).<br>
+<br>
+<span style="font-weight: bold; font-style: italic;">Achtung:
+</span><span style="font-style: italic;">Das JRE ist sehr
+gro&szlig; (ca. 15MB). Wenn man per Modem oder ISDN im Netz ist,
+kann das schon mal ein bisschen dauern. Wenn man einen guten Freund mit
+DSL hat, der einem das schnell mal auf CD Brennen kann, ist das sicher
+eine gute Idee :)</span><br style="font-style: italic;">
+&nbsp;<br>
+Als n&auml;chstes muss man die Installation starten. Dazu gehst Du
+in das Verzeichnis, wo der Browser die Datei hingelegt hat und klickst
+die Datei doppelt. Ein normaler Installer &ouml;ffnet sich und dort
+muss man dann die Lizenzbedinungen von Java best&auml;tigen und ein
+paar Einstellungen t&auml;tigen. In der Regel sollten die
+vorgegebenen Einstellungen allerdings in Ordnung sein, so da&szlig;
+man sich immer mit dem Weiter-Button durchhangeln kann.<br>
+<br>
+Nach der Installation mu&szlig; der Rechner unter
+Umst&auml;nden neu gestartet werden. Es w&auml;re sicher JETZT
+eine&nbsp; gute Idee, diese Webseite als Lesezeichen oder Favorit
+abzulegen :)<br>
+<br>
+Wenn man damit fertig ist, sollte man den <a
+ href="#Test_ob_Java_vorhanden_ist">Test</a>
+von oben (java -version) noch einmal wiederholen. Klappt das immer noch
+nicht, hast Du irgendwas falsch gemacht. Geh die Schritte einfach
+nochmal durch, oder frage einen Freund oder eine Freundin, der oder die
+vielleicht helfen kann. Hier versagen in der Regel meine Mittel, aus
+der Ferne zu helfen...<br>
+<h3>Kurzer Exkurs: Warum ist mein
+Programm in Java geschrieben und muss so kompliziert installiert werden?</h3>
+Java ist eine tolle Programmiersprache, f&uuml;r die es tolle
+kostenlose Tools gibt, um schnell und einfach so komplizierte Programme
+wie den Rasterizer zu entwickeln. Noch was tolles ist, das
+Javaprogramme, wenn man sie einmal entwickelt hat, auf jedem Computer
+laufen, der Java installiert hat, und zwar unabh&auml;ngig davon,
+ob es sich um einen Mac, einen Windows-PC oder einen Linux-Rechner
+handelt. Und zu guter Letzt gibt es f&uuml;r Java eine ganz tolle
+Bibliothek um PDF-Dateien zu erzeugen, also die Acrobat-Dateien, die
+beim Rasterizer (und auch bei dem original-Rasterbator) hinten
+rauskommen.<br>
+<br>
+[<a href="Rasterizer%20Tutorial%20Deutsch.html#Inhaltsverzeichnis">&lt;&lt;Zur&uuml;ck
+zum Inhaltsverzeichnis</a>]<br>
+<h1><a name="Rasterizer_installieren">Rasterizer installieren</a></h1>
+<a name="Rasterizer_installieren">F&uuml;r
+Anf&auml;nger bietet sich
+die GUI-Version an. GUI
+steht f&uuml;r "Graphical User Interface" (Grafische
+Benutzeroberfl&auml;che) und bedeutet nix anderes, als dass die
+GUI-Version nicht &uuml;ber die Kommandozeile (jaja, das cmd-Ding
+von eben), sondern wie unter Windows gewohnt &uuml;ber eine
+Fenster-Oberfl&auml;che gesteuert wird.<br>
+<br>
+Die GUI-Version kannst Du von </a><a
+ href="http://rasterizer.krutisch.de/rasterizergui_0_2.zip">rasterizer.krutisch.de</a>
+herunterladen.<br>
+<br>
+Bei der Datei, die Du dann heruntergeladen hast (Wenn dein Freund mit
+dem DSL-Anschluss das Java runterl&auml;dt, soll er den Rasterizer
+gleich mit auf die CD brennen), handelt es sich um eine ZIP-Datei. Wenn
+Du WindowsXP hast, dann kannst Du die Datei mit Windows &ouml;ffnen
+(Doppelklick!) und die enthaltenen Dateien einfach in ein beliebiges
+Verzeichnis (z.B. auf den Desktop oder nach Eigene Dateien) entpacken.<br>
+<br>
+Solltest Du Windows 2000 oder noch was &auml;lteres haben, solltest
+Du auch versuchen, die Datei doppelt zu klicken. <br>
+Eventuell &ouml;ffnet sich ein sog. Archivierungsprogramm, wie z.B.
+WinZIP,WinRAR,PowerArchiver oder FilZIP. Das ist gut. Dann kannst Du
+auch einfach die Dateien in ein beliebiges Verzeichnis entpacken.<br>
+Wenn sich statt dessen ein Fenster &ouml;ffnet, das ganz viele
+Programme in einer Liste darstellt und Dich fragt, mit welchen Du die
+Datei &ouml;ffnen willst, dann musst Du leider auf "Abbrechen"
+klicken und schweren Herzens muss ich Dich bitten, noch ein Programm zu
+installieren, n&auml;mlich eines von den oben genannten
+Archivierungsprogrammen. Mein Favorit, weil schnell und kostenlos, ist <a
+ href="http://www.filzip.com/de/">Filzip</a>.
+<a href="http://www.winzip.com/">WinZIP</a>
+kann man zum entpacken auch ganz gut verwenden, ohne es zu bezahlen.
+Bitte sei mir nicht b&ouml;se, dass ich jetzt hier die Installation
+nicht auch noch im Detail beschreibe, das sollten die Webseiten der
+genannten Programme auch ganz gut hinbekommen.<br>
+<br>
+Jetzt solltest Du also ein Verzeichnis (Einen Ordner) haben, in dem die
+drei Dateien drin sind, die in dem ZIP-Archiv auch drin waren. Wichtig
+ist davon nur die Datei "rasterizergui.jar". (Je nach Einstellung zeigt
+Dir dein Windows auch nur "rasterizergui" an).<br>
+<br>
+[<a href="Rasterizer%20Tutorial%20Deutsch.html#Inhaltsverzeichnis">&lt;&lt;Zur&uuml;ck
+zum Inhaltsverzeichnis</a>]<br>
+<h1><a name="Rasterizer_Starten">Rasterizer Starten</a></h1>
+<a name="Rasterizer_Starten">Mit
+Gl&uuml;ck l&auml;sst sich der
+Rasterizer jetzt schon
+starten, in dem Du doppelt draufklickst. Das Fenster sieht dann ca. so
+aus:<br>
+<br>
+<img style="width: 366px; height: 441px;"
+ alt="Das Fenster des Rasterizers" src="img/rasterizerwindow.gif"><br>
+<br>
+Startet statt dessen ein anderes Tool (zB. das Archivierungsprogramm
+von eben), wird es ein bisschen komplizierter:<br>
+</a>
+<ul>
+  <li><a name="Rasterizer_Starten">Aus dem Startmen&uuml;
+wieder das "Ausf&uuml;hren..."-Fenster &ouml;ffnen</a></li>
+  <li><a name="Rasterizer_Starten">Dieses mal nicht cmd [oder
+command] eingeben, sondern "notepad" und die Eingabetaste
+dr&uuml;cken</a></li>
+  <li><a name="Rasterizer_Starten">Ein einfacher Texteditor
+sollte aufgehen</a></li>
+  <li><a name="Rasterizer_Starten">Dort gibst Du nur eine
+Zeile
+ein, n&auml;mlich "java -jar rasterizergui.jar":</a></li>
+</ul>
+<a name="Rasterizer_Starten"><img style="width: 364px; height: 146px;"
+ alt="notepad mit der batchdatei" src="img/notepad_rasterizerbat.gif"><br>
+<br>
+Diesen Text musst Du jetzt in das selbe Verzeichnis abspeichern, in dem
+auch die rasterizergui-Datei liegt, und zwar unter dem Namen
+"rasterizergui.bat" (Dazu musst Du in dem "Speichern"-Dialog den
+Dateityp unten auf "Alle Dateien" umstellen).<br>
+<br>
+Wenn das alles geklappt hat, solltest Du jetzt die Textdatei mit einem
+Doppelklick starten k&ouml;nnen. Es &ouml;ffnet sich wieder so
+eine schwarze Kommandozeile und dann sollte sich der Rasterizer
+&ouml;ffnen:<br>
+<br>
+<img style="width: 736px; height: 558px;"
+ alt="Rasterizer-Fenster mit Batch-Datei im Hintergrund"
+ src="img/rasterizerbatchstart.gif"><br>
+<br>
+Zuk&uuml;nftige Versionen vom Rasterizer werden diesen Schritt mit
+der .bat-Datei nicht mehr brauchen, das kann ich Euch versprechen :)<br>
+<br>
+Damit kann jetzt nichts mehr schief gehen und wir k&ouml;nnen uns
+ENDLICH der Benutzung des Rasterizers zuwenden.<br>
+<br>
+[</a><a href="Rasterizer%20Tutorial%20Deutsch.html#Inhaltsverzeichnis">&lt;&lt;Zur&uuml;ck
+zum Inhaltsverzeichnis</a>]<br>
+<h1><a name="Dateiauswahl">Dateiauswahl</a></h1>
+<a name="Dateiauswahl">Um
+den Rasterizer benutzen zu k&ouml;nnen,
+m&uuml;ssen wir
+zun&auml;chst einmal zwei Dateien ausw&auml;hlen. Zum einen das
+Bild, das in ein Rasterbild umgewandelt werden soll, zum anderen die
+PDF-Datei, die nachher erzeugt werden soll.<br>
+</a>
+<h2><a name="Dateiauswahl">Bild ausw&auml;hlen</a></h2>
+<a name="Dateiauswahl">Was
+f&uuml;r Bilder eignen sich f&uuml;r die
+Rasterisierung? <br>
+Also zun&auml;chst einmal kann der Rasterizer momentan nur die
+Typen gif, jpeg und png verarbeiten verarbeiten. Wenn Du ein Bild in
+einem anderen Format (z.B. als Photoshop-Datei oder als Coreldraw-Datei
+oder sonst irgendwas seltsames) vorliegen hast, m&uuml;sst Ihr das
+erst einmal umwandeln. Tutorials, wie man Bilder umwandelt gibt es im
+Netz wie Sand am Meer, das w&uuml;rde den Rahmen jetzt hier
+sprengen. Gehen wir also davon aus, dass Du ein jpg-Photo rumliegen
+hast.<br>
+Zum anderen braucht der Rasterizer kontrastreiche Bilder. Eine
+gr&uuml;ne Wiese und sonst nix wird vermutlich eher unattraktiv
+aussehen. Es schadet auch nicht, mit einer Bildbearbeitung, wie sie
+z.B. bei vielen Digicams dabei liegt, den Kontrast einfach ein bisschen
+hochzudrehen.<br>
+Meines Erachtens sehen Schwarz-Weiss-Bilder immer noch am besten aus.
+Der Rasterizer kann inzwischen zwar auch farbig rastern, das
+funktioniert aber nur sehr bedingt, z.B. saufen kr&auml;ftige
+Farben gern ab, das Bild wird irgendwie flau. <br>
+Das bedeutet allerdings nicht, dass Du die Bilder selber in Graustufen
+umwandeln m&uuml;sst, denn das kann der Rasterizer auch selber.
+Manchmal kann es allerdings sinnvoll sein, die Umwandlung mit einem
+Bildbearbeitungsprogramm selber zu machen, damit bestimmte Details
+nicht verloren gehen.<br>
+<br>
+Alles in allem gilt: Ausprobieren hilft.<br>
+<br>
+Um ein Bild in den Rasterizer zu laden, klickst Du auf den Button
+"Ausw&auml;hlen..." und kannst dann ein Bild von Deiner Festplatte
+ausw&auml;hlen:<br>
+<br>
+<img style="width: 536px; height: 454px;" alt="Bild &ouml;ffnen-Dialog"
+ src="img/bild_open.gif"><br>
+<br>
+</a>
+<h2><a name="Dateiauswahl">PDF-Datei ausw&auml;hlen</a></h2>
+<a name="Dateiauswahl">Die
+PDF-Datei ist die Datei, in der nachher das
+gerasterte Bild landet.
+Eine PDF-Datei kannst Du z.B. mit dem Adobe Reader &ouml;ffnen, der
+auf den meisten Windows-Rechnern installiert sein sollte. Wenn nicht,
+nunja, inzwischen weisst Du ja, wie man Programme installiert. Den
+Reader gibt es, wie gesagt, von </a><a
+ href="http://www.adobe.de/products/acrobat/readstep2.html?c=de">Adobe</a>.<br>
+<br>
+Den Namen der PDF-Datei kannst Du frei w&auml;hlen, so als wenn Du
+z.B. in Word "Speicher unter..." dr&uuml;ckst. Da der Bildschirm
+fast genau so aussieht, wie bei dem Bild, spar ich mir einen Screenshot.<br>
+<br>
+[<a href="Rasterizer%20Tutorial%20Deutsch.html#Inhaltsverzeichnis">&lt;&lt;Zur&uuml;ck
+zum Inhaltsverzeichnis</a>]<br>
+<h1><a name="Einstellungen">Einstellungen</a></h1>
+<a name="Einstellungen">Jetzt
+wird es interessant, denn jetzt musst Du
+einstellen, was denn
+eigentlich hinten raus kommen soll.<br>
+</a>
+<h2><a name="Einstellungen">Seitenoptionen</a></h2>
+<a name="Einstellungen">Als
+erstes musst Du einstellen, wie gro&szlig;
+dein Rasterbild
+werden soll. Gemessen wird das in "Anzahl horizontaler Seiten", Du
+musst also bestimmen, wie viele Seiten Du horizontal (also von links
+nach rechts) nebeneinander haben willst. Je mehr Seiten, desto
+gr&ouml;&szlig;er wird dein Rasterbild. Die Anzahl der
+vertikalen Seiten (also von oben nach unten) ergibt sich dann
+automatisch durch das Format vom Bild. Nehmen wir mal an, Du stellst 3
+ein, dann w&uuml;rde folgendes dabei rauskommen:<br>
+<br>
+<img style="width: 200px; height: 169px;"
+ alt="Ein Schaf in Sechs Seiten" src="img/schaf_aufgeteilt.jpg"><br>
+<br>
+Du h&auml;ttest am Ende also sechs Seiten.<br>
+<br>
+Als n&auml;chstes musst Du das Papierformat festlegen. Zur Wahl
+stehen hier zur Zeit nur ein paar Standardformate, in Deutschland sind
+vor allem A4 und A3 ein Begriff. Im Zweifel, wenn Du einen normalen
+Drucker hast, lass es auf A4 stehen.<br>
+<br>
+Zuletzt kannst Du noch auf Querformat umstellen. Querformat bedeutet
+nichts anderes, als dass die Seiten nicht wie oben bei dem Schaf
+hochkant aneinander gereiht werden, sondern quer (Mein Beispiel hat
+jetzt allerdings nur 2 eingestellt bei "Anzahl horizontaler Seiten"):<br>
+<br>
+<img style="width: 200px; height: 169px;"
+ alt="Schaf auf sechs anderen Seiten" src="img/schaf_aufgeteilt2x3.jpg"><br>
+</a>
+<h2><a name="Einstellungen">Stiloptionen</a></h2>
+<a name="Einstellungen">Hier
+kannst Du bestimmen, wie die Rasterpunkte
+auf die Seiten kommen. <br>
+<br>
+Als erstes kannst Du einstellen, wie gro&szlig; die Punkte werden
+sollen. Die Angabe ist in "Point", das ist also f&uuml;r jemanden,
+der nicht st&auml;ndig mit dem Taschenrechner k&auml;mpfen will
+eher was zum ausprobieren. 10 pt sieht bei den meisten Bildern sehr gut
+aus, wenn man feinere Details haben will, kann man auch schon mal 6pt
+angeben, kleiner ist sinnlos, finde ich. Je gr&ouml;&szlig;er
+das komplette Rasterbild ist, desto gr&ouml;&szlig;er kann man
+auch die Punkte machen, weil ja auch vermutlich die Betrachter dann
+weiter weg sind.<br>
+Beim Farbmodus kann man nur Schwarz/Weiss und "einfache Farbe"
+ausw&auml;hlen, f&uuml;r die meissten Bilder sieht hier
+Schwarz/Weiss einfach am besten aus. (Auch hier hilt wieder:
+Ausprobieren, ausprobieren)<br>
+Als letztes kannst Du noch sog. Schnittmarken in die Bilder
+einf&uuml;gen. Dabei handelt es sich um hauchfeine Linien, die
+einem das Schneiden und Zusammenkleben der Bilder erleichtern sollen.
+Wenn Du "Smart" ausw&auml;hlst, werden die Schnittmarken nur an den
+Kanten gezeichnet, an denen wirklich Seiten aufeinander
+sto&szlig;en, d.h. an Aussenkanten der "Randseiten" werden sie
+weggelassen, denn sonst w&uuml;rden sie da wom&ouml;glich
+st&ouml;ren.<br>
+<br>
+Jetzt sollten alle Einstellungen erledigt sein.<br>
+<br>
+[</a><a href="Rasterizer%20Tutorial%20Deutsch.html#Inhaltsverzeichnis">&lt;&lt;Zur&uuml;ck
+zum Inhaltsverzeichnis</a>]<br>
+<h1><a name="Rastern">Rastern</a></h1>
+<a name="Rastern">Ein Druck
+auf&nbsp; "Rasterize!" startet den
+Rastervorgang. Wenn
+der Fortschritts-Balken unter dem "Rasterize!"-Button
+vollst&auml;ndig dunkel geworden ist und dort "finished" steht,
+sollte das gerasterte Bild fertig sein. Jetzt musst Du nur noch die
+entstandene&nbsp; PDF-Datei doppelt klicken. Es sollte sich der
+Adobe Reader &ouml;ffnen und 'nen Haufen Punkte anzeigen:<br>
+<br>
+<img style="width: 450px; height: 526px;"
+ alt="Adobe Reader mit Test-PDF" src="img/readerwithtest.gif"><br>
+<br>
+Dieses PDF musst Du jetzt ausdrucken. Je nach Seitenanzahl ist es
+vielleicht 'ne gute Idee, jetzt 'nen Kaffee trinken zu gehen :)<br>
+<br>
+[</a><a href="Rasterizer%20Tutorial%20Deutsch.html#Inhaltsverzeichnis">&lt;&lt;Zur&uuml;ck
+zum Inhaltsverzeichnis</a>]<br>
+<h1><a name="Montieren">Montieren</a></h1>
+<a name="Montieren">Im
+letzten Schritt muss das Rasterbild jetzt noch
+montiert
+(zusammengesetzt) werden. Dazu gibt es so viele M&ouml;glichkeitem
+dass ich nur ein ganz paar hier wiedergeben m&ouml;chte:<br>
+<br>
+Es ist Geschmackssache, ob man die weissen R&auml;nder dran
+l&auml;sst (so
+da&szlig; man genau sehen kann, wie das Bild auf die Seiten
+aufgeteilt ist),
+oder ob man die Bilder direkt und akkurat beschnitten aneinander
+h&auml;ngt,
+so dass man keine Zwischenr&auml;ume sieht. F&uuml;r die
+Variante ohne Zwischenr&auml;ume kann man z.B. sehr sch&ouml;n
+die Schnittmarken auf Smart setzen und dann jeweils zwei
+R&auml;nder der Seiten abschneidet, so da&szlig; man die Seiten
+dann z.B. mit einem Klebestift zusammensetzen kann.<br>
+<br>
+Man kann auch, wie bei S.O.S. gezeigt, die ordentlich beschnittenen
+Seiten auf Hartfaser-Platten kleben und diese an die Wand nageln.
+Wichtig: Man sollte die Hartfaserplatten dann auf das genaue
+Ma&szlig; der beschnittenen Bilder schneiden (oder z.B. im Baumarkt
+schneiden lassen)<br>
+<br>
+[</a><a href="Rasterizer%20Tutorial%20Deutsch.html#Inhaltsverzeichnis">&lt;&lt;Zur&uuml;ck
+zum Inhaltsverzeichnis</a>]<br>
+</body>
+</html>
