@@ -20,6 +20,12 @@ package de.krutisch.jan.rasterizer;
  * $Id$
  * 
  * $Log$
+ * Revision 1.6  2004/09/09 18:05:36  halfbyte
+ * Modified -c, now stands for experimental color support (using
+ * the rasterbator approach).
+ * old -c is now -m (Cropmarks)
+ * This is version 0.5
+ *
  * Revision 1.5  2004/06/13 00:32:10  halfbyte
  * Added -c for cropmarks. This is 0.4
  *
@@ -42,14 +48,24 @@ package de.krutisch.jan.rasterizer;
  * 
  */
 
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
+import gnu.getopt.Getopt;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Date;
-import java.io.*;
-import java.awt.*;
-import java.awt.image.*;
-import javax.imageio.*;
-import gnu.getopt.*;
+
+import javax.imageio.ImageIO;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfWriter;
 
 public class Rasterizer {
 
@@ -67,13 +83,14 @@ public class Rasterizer {
 	private boolean autoMargins = false;
 	private boolean printCropmarks = false;
 	private boolean printAllCropmarks = false;
+	private boolean printColor = false;
 	private com.lowagie.text.Rectangle pageSize = null;
-
+	private static final String VERSION = "0.5";
 
 	// 	
 	public Rasterizer(String[] args) {
 		
-		System.out.println("Rasterizer V0.4 (c) 2004 JanKrutisch");
+		System.out.println("Rasterizer " + VERSION + "(c) JanKrutisch");
 		// parse options using getOpt
 		pageSize = null;
 		if (parseOptions(args) == false) return;
@@ -336,6 +353,12 @@ public class Rasterizer {
 				// Get color value of the pixel
 				int color = img.getRGB(x+xStart,y+yStart);
 				// calculating gray value
+				Color pdfColor = null;
+				if (printColor) {
+					pdfColor = new Color(cm.getRed(color),cm.getGreen(color),cm.getBlue(color));
+				} else {
+					pdfColor = new Color(0,0,0);
+				}
 				int value = cm.getRed(color);
 				value += cm.getGreen(color);
 				value += cm.getBlue(color);
@@ -367,7 +390,7 @@ public class Rasterizer {
 				// to allow different shapes.
 				if (r>0f) {
 					// Set color
-					cb.setRGBColorFillF(0f,0f,0f);
+					cb.setColorFill(pdfColor);
 					// create circle path
 					cb.circle((dotSize*x)+document.left()+(dotSize/2),document.top()-(dotSize/2)-(dotSize*y),r);
 					// fill path
@@ -382,12 +405,12 @@ public class Rasterizer {
 	 * Parse Commandline Options using GNU Getopt.
 	 */	
 	private boolean parseOptions(String[] args) {
-		Getopt g = new Getopt("Rasterizer", args, "p:s:d:c::lvh");
+		Getopt g = new Getopt("Rasterizer", args, "p:s:d:m::lvhc");
 		int c;
 		String arg;
 		while((c= g.getopt()) != -1) {
 			switch(c) {
-				case 'c':
+				case 'm':
 					printCropmarks = true;
 					if ("all".equals(g.getOptarg())) {
 						printAllCropmarks = true;
@@ -421,6 +444,9 @@ public class Rasterizer {
 						xPages = 4;
 					}
 					break;
+				case 'c':
+					//Color mode
+					printColor = true;
 				case '?':
 					break;
 				default:
@@ -461,9 +487,10 @@ public class Rasterizer {
 		System.out.println("-p : Number of horizontal pages (vertical will be chosen according to aspect ratio of source image)");
 		System.out.println("-l : Use Pages in Landscape");
 		System.out.println("-s : Paper Size. Allowed Values: A4, A3, LETTER, LEGAL");
-		System.out.println("-c : Print Cropmarks intelligently. use -call for forced cropmarks");				
+		System.out.println("-m : Print Cropmarks intelligently. use -mall for forced cropmarks");				
 		System.out.println("-d : Dotsize in pt. Defaults to 10pt");				
 		System.out.println("-h : The stuff you are reading right now. No Action.");
+		System.out.println("-c : Experimental color output (the Rasterbator solution)");
 		System.out.println("-v : Verbose output");
 		System.out.println("inputfile  : Input file (.jpeg, .gif, .png)");
 		System.out.println("outputfile : Output file (.pdf) defaults to out.pdf. '.pdf' is added if filename doesn't end on .pdf");
