@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import com.lowagie.text.PageSize;
+import java.util.*;
 
 
 public class RasterizerGui implements ActionListener{
@@ -14,8 +15,8 @@ public class RasterizerGui implements ActionListener{
      */
 	
 	static final String[] pageFormatOptions= {"A4","A3","LETTER","LEGAL"};
-	static final String[] colorOptions= {"Schwarz/Weiss","Einfache Farbe"};
-	static final String[] cropmarkOptions= {"Keine","Smart","Alle"};
+	//static final String[] colorOptions= {"Schwarz/Weiss","Einfache Farbe"};
+	//static final String[] cropmarkOptions= {"Keine","Smart","Alle"};
 	
 	JTextField imageFileTextField,pdfFileTextField;
 	JButton	imageFileButton,pdfFileButton,startButton,cancelButton;
@@ -37,17 +38,25 @@ public class RasterizerGui implements ActionListener{
 	File imageFile;
 	File pdfFile;
 	RasterThread thread;
+	ResourceBundle guires;
+	PropertyResourceArrayBundle arrayRes;
+	
 	
 	RasterizerGui() {
+		// loading locale
+		guires = ResourceBundle.getBundle("guiresource",Locale.GERMANY);
+		arrayRes = new PropertyResourceArrayBundle(guires);
 		
-		window = new JFrame("RasterizerGui");
+		window = new JFrame(guires.getString("windowTitle"));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         Component contents = createComponents();
         window.getContentPane().add(contents, BorderLayout.CENTER);
 
 		imageChooser = new JFileChooser();
+		imageChooser.addChoosableFileFilter(new ImageFileFilter());
 		pdfChooser = new JFileChooser();
+		pdfChooser.addChoosableFileFilter(new PdfFileFilter());
 
         
         //Display the window.
@@ -55,7 +64,7 @@ public class RasterizerGui implements ActionListener{
         window.setVisible(true);
         logger = new TextFieldLogger();
         logger.setLogLevel(EventLogger.VERBOSE);
-		logger.log(EventLogger.VERBOSE,"Setting up...");
+		//logger.log(EventLogger.VERBOSE,"Setting up...");
 		ri = RasterizerImage.getInstance(logger);
 		rp = RasterizerPdf.getInstance(logger);
 		rp.setProgressBar(overallProgressBar);
@@ -80,24 +89,24 @@ public class RasterizerGui implements ActionListener{
         
         filesPanel = new JPanel(new GridLayout(0,3));
         	filesPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder("Dateien"),
+                BorderFactory.createTitledBorder(guires.getString("files")),
                 BorderFactory.createEmptyBorder(5,5,5,5)));
-        	JLabel imageLabel = new JLabel("Bild");
+        	JLabel imageLabel = new JLabel(guires.getString("image"));
         	imageFileTextField = new JTextField();
         	imageLabel.setLabelFor(imageFileTextField);
         	filesPanel.add(imageLabel);
         	filesPanel.add(imageFileTextField);
-        	imageFileButton = new JButton("<html>Ausw&auml;hlen...</html>");
+        	imageFileButton = new JButton(guires.getString("fileSelect"));
         	imageFileButton.setActionCommand("IMAGEFILE");
         	imageFileButton.addActionListener(this);
         	filesPanel.add(imageFileButton);
         	
-        	JLabel pdfLabel = new JLabel("Pdf");
+        	JLabel pdfLabel = new JLabel(guires.getString("pdf"));
         	pdfFileTextField = new JTextField();
         	pdfLabel.setLabelFor(pdfFileTextField);
         	filesPanel.add(pdfLabel);
         	filesPanel.add(pdfFileTextField);
-        	pdfFileButton = new JButton("<html>Ausw&auml;hlen...</html>");
+        	pdfFileButton = new JButton(guires.getString("fileSelect"));
         	pdfFileButton.setActionCommand("PDFFILE");
         	pdfFileButton.addActionListener(this);
         	filesPanel.add(pdfFileButton);
@@ -108,40 +117,40 @@ public class RasterizerGui implements ActionListener{
         
         pagePanel = new JPanel(new GridLayout(0,2));
         pagePanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder("Seitenoptionen"),
+                BorderFactory.createTitledBorder(guires.getString("pageOptions")),
                 BorderFactory.createEmptyBorder(5,5,5,5)));
-        	JLabel pagesLabel = new JLabel("Horizontale Seitenanzahl");
+        	JLabel pagesLabel = new JLabel(guires.getString("horizontalPages"));
         	pagesSpinner = new JSpinner();
         	pagesSpinner.setModel(new SpinnerNumberModel(3,1,100,1));
            	pagesLabel.setLabelFor(pagesSpinner);
         	pagePanel.add(pagesLabel);
         	pagePanel.add(pagesSpinner);
         	pageFormatComboBox = new JComboBox(pageFormatOptions);
-        	JLabel pageFormatLabel = new JLabel("Seitenformat");
+        	JLabel pageFormatLabel = new JLabel(guires.getString("pageFormat"));
         	pageFormatLabel.setLabelFor(pageFormatComboBox);
         	pagePanel.add(pageFormatLabel);
         	pagePanel.add(pageFormatComboBox);
-        	landscapeCheckBox = new JCheckBox("Querformat");
+        	landscapeCheckBox = new JCheckBox(guires.getString("landscapeFormat"));
         	pagePanel.add(landscapeCheckBox);
         pane.add(pagePanel);
 
         stylePanel = new JPanel(new GridLayout(0,2));
         stylePanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder("Stiloptionen"),
+                BorderFactory.createTitledBorder(guires.getString("styleOptions")),
                 BorderFactory.createEmptyBorder(5,5,5,5)));
         	dotSizeSpinner = new JSpinner();
         	dotSizeSpinner.setModel(new SpinnerNumberModel(10,4,30,1));
-        	JLabel dotSizeLabel = new JLabel("Maximaler Punktdurchmesser");
+        	JLabel dotSizeLabel = new JLabel(guires.getString("maxDotSize"));
         	dotSizeLabel.setLabelFor(dotSizeSpinner);
         	stylePanel.add(dotSizeLabel);
         	stylePanel.add(dotSizeSpinner);
-        	colorComboBox = new JComboBox(colorOptions);
-        	JLabel colorLabel = new JLabel("Farbmodus");
+        	colorComboBox = new JComboBox(arrayRes.getStringArray("colorModeOptions"));
+        	JLabel colorLabel = new JLabel(guires.getString("colorMode"));
         	colorLabel.setLabelFor(colorComboBox);
         	stylePanel.add(colorLabel);
         	stylePanel.add(colorComboBox);
-        	cropmarkComboBox = new JComboBox(cropmarkOptions);
-        	JLabel cropmarkLabel = new JLabel("Schnittmarken");
+        	cropmarkComboBox = new JComboBox(arrayRes.getStringArray("cropmarkOptions"));
+        	JLabel cropmarkLabel = new JLabel(guires.getString("cropmarks"));
         	cropmarkLabel.setLabelFor(cropmarkComboBox);
         	stylePanel.add(cropmarkLabel);
         	stylePanel.add(cropmarkComboBox);
@@ -150,13 +159,13 @@ public class RasterizerGui implements ActionListener{
         pane.add(stylePanel);
 
         buttonPanel = new JPanel(new GridLayout(0,2));
-        startButton = new JButton("Rasterize!");
+        startButton = new JButton(guires.getString("startRasterize"));
         startButton.setMnemonic(KeyEvent.VK_I);
         startButton.setActionCommand("START");
         startButton.addActionListener(this);
        
         buttonPanel.add(startButton);
-        JButton cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton(guires.getString("cancel"));
         cancelButton.setActionCommand("CANCEL");
         cancelButton.addActionListener(this);
        
@@ -165,12 +174,6 @@ public class RasterizerGui implements ActionListener{
         
         
         pane.add(buttonPanel);
-        pageProgressBar = new JProgressBar();
-        pageProgressBar.setString("0/0 Pages");
-        pageProgressBar.setStringPainted(true);
-        pageProgressBar.setValue(0);
-        pageProgressBar.setEnabled(false);
-        //pane.add(pageProgressBar);
         overallProgressBar = new JProgressBar();
         overallProgressBar.setStringPainted(true);
         overallProgressBar.setString("");
@@ -239,7 +242,7 @@ public class RasterizerGui implements ActionListener{
 		
 		if (event.getActionCommand().equals("START")) {
 			if (!validateOptions()) { 
-				JOptionPane.showMessageDialog(window,"Fehlende oder falsche Eingaben");
+				JOptionPane.showMessageDialog(window,guires.getString("missingParameters"));
 				return;
 			}
 			setOptions();
@@ -249,10 +252,10 @@ public class RasterizerGui implements ActionListener{
 		}
 		
 		if (event.getActionCommand().equals("CANCEL")) {
-			if (JOptionPane.showConfirmDialog(window,"Aktion wirklich abbrechen ?","Abbruch",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE)==JOptionPane.YES_OPTION) {
+			if (JOptionPane.showConfirmDialog(window,guires.getString("reallyCancel"),guires.getString("cancelTitle"),JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE)==JOptionPane.YES_OPTION) {
 			
 			if (thread!=null && thread.isAlive()) {
-				logger.log(EventLogger.TERSE,"Trying abortion...");
+				logger.log(EventLogger.TERSE,"");
 				thread.interrupt();
 				thread = null;
 				switchGuiStopped();
@@ -265,7 +268,7 @@ public class RasterizerGui implements ActionListener{
 
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            imageFile = imageChooser.getSelectedFile();
-	            imageFileTextField.setText(imageFile.toString());
+	            imageFileTextField.setText(imageFile.getAbsolutePath());
 	        }
 		}
 		if (event.getActionCommand().equals("PDFFILE")) {
@@ -273,17 +276,19 @@ public class RasterizerGui implements ActionListener{
 
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            pdfFile = pdfChooser.getSelectedFile();
-	            if (pdfFile.exists()) {
-	            	if (JOptionPane.showConfirmDialog(window,"Datei vorhanden.\n ?berschreiben?","Datei vorhanden",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE)==JOptionPane.YES_OPTION) {
-	            		pdfFileTextField.setText(pdfFile.toString());
-	            	}
-	            } else {
-	            	pdfFileTextField.setText(pdfFile.toString());
-	            }
+	            String pdfFilePath = pdfFile.getAbsolutePath();
 	            
-	        } else {
-	        	logger.log("FR.option:" + returnVal);
-	        }
+	            if (pdfFile.exists()) {
+	            	if (JOptionPane.showConfirmDialog(window,guires.getString("fileExistsOverwrite"),guires.getString("fileExistsTitle"),JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE)==JOptionPane.NO_OPTION) {
+	            		pdfFilePath = "";
+	            	}
+	            }
+	            if (!pdfFilePath.toLowerCase().endsWith(".pdf")) {
+	            	pdfFilePath += ".pdf";
+	            }
+	            pdfFileTextField.setText(pdfFilePath);
+	            
+	        } 
 		}
 		
 		
