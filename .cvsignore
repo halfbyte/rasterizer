@@ -3,3 +3,5 @@ rasterizer*.zip
 colortest.jpg
 *.pdf
 *.jar
+bin
+dist
