@@ -30,6 +30,10 @@
 			<fileset dir="${readme}">
 				<include name="gpl.txt"/>
 			</fileset>
+			<fileset dir="${src}">
+				<include name="rasterizer.gif"/>
+				<include name="*.properties"/>
+			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="de.krutisch.jan.rasterizer.RasterizerGui"/>
 				<attribute name="Class-Path" value=". ${jarclasspath}"/>
