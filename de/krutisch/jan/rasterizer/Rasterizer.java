@@ -20,6 +20,9 @@ package de.krutisch.jan.rasterizer;
  * $Id$
  * 
  * $Log$
+ * Revision 1.8  2004/09/11 12:39:20  halfbyte
+ * Reimplemented Landscape (was missing)
+ *
  * Revision 1.7  2004/09/11 12:24:09  halfbyte
  * Working Phase, only CLI
  *
@@ -117,6 +120,7 @@ public class Rasterizer {
 		}
 		rp.setPageSize(pageSize);
 		rp.setDotSize(dotSize);
+		rp.setLandscape(landscape);
 		
 		if (printAllCropmarks) {
 			rp.setCropmarks(RasterizerPdf.ALLCROPMARKS);

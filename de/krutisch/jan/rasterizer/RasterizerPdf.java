@@ -33,6 +33,7 @@ public class RasterizerPdf {
 	static float dotSize;
 	static int pages;
 	static EventLogger logger;
+	static boolean landscape;
 	public static final int NOCOLOR=0,SIMPLECOLOR=1;
 	public static final int NOCROPMARKS=0,CROPMARKS=1,ALLCROPMARKS=2;
 	
@@ -63,6 +64,9 @@ public class RasterizerPdf {
 	
 	public void setCropmarks(int c) {
 		cropmarks = c;
+	}
+	public void setLandscape(boolean b) {
+		landscape = b;
 	}
 	
 	public void setPageSize(Rectangle ps) {
@@ -211,6 +215,7 @@ public class RasterizerPdf {
 		if (file == null) return false;
 		if (ri == null) return false;
 		if (pageSize == null) return false;
+		if (landscape) pageSize = pageSize.rotate();
 		
 		int colsPerPage = (int)((pageSize.width()-72) / dotSize);
 		int rowsPerPage = (int)((pageSize.height()-72) / dotSize);
