@@ -7,6 +7,7 @@
 
 package de.krutisch.jan.rasterizer;
 import javax.swing.*;
+
 import java.beans.*;
 import java.awt.*;
 import java.io.File;
@@ -18,8 +19,9 @@ public class ImageFileAccessory extends JComponent
     File file = null;
 
     public ImageFileAccessory(JFileChooser fc) {
-        setPreferredSize(new Dimension(100, 50));
+        setPreferredSize(new Dimension(200, 100));
         fc.addPropertyChangeListener(this);
+        this.setBorder(BorderFactory.createLoweredBevelBorder());
     }
 
     public void loadImage() {
@@ -35,8 +37,8 @@ public class ImageFileAccessory extends JComponent
         if (tmpIcon != null) {
             if (tmpIcon.getIconWidth() > 90) {
                 thumbnail = new ImageIcon(tmpIcon.getImage().
-                                          getScaledInstance(90, -1,
-                                                      Image.SCALE_DEFAULT));
+                                          getScaledInstance(150, -1,
+                                                      Image.SCALE_SMOOTH));
             } else { //no need to miniaturize
                 thumbnail = tmpIcon;
             }
