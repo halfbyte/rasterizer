@@ -63,6 +63,7 @@ public class RasterizerGui implements ActionListener{
         //Display the window.
         window.pack();
         window.setVisible(true);
+       
         logger = new TextFieldLogger();
         logger.setLogLevel(EventLogger.VERBOSE);
 		//logger.log(EventLogger.VERBOSE,"Setting up...");
@@ -185,8 +186,13 @@ public class RasterizerGui implements ActionListener{
                             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                             JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         logTextArea.setEditable(false);
+        scrollPane.setMinimumSize(new Dimension(200,50));
+        scrollPane.setPreferredSize(new Dimension(200,200));
+        scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE,Integer.MAX_VALUE));
         pane.add(scrollPane);
-        
+        pane.setMinimumSize(new Dimension(200,600));
+        pane.setPreferredSize(new Dimension(400,600));
+        pane.setMaximumSize(new Dimension(400,800));
         return pane;
     }
 
