@@ -20,6 +20,9 @@ package de.krutisch.jan.rasterizer;
  * $Id$
  * 
  * $Log$
+ * Revision 1.5  2004/06/13 00:32:10  halfbyte
+ * Added -c for cropmarks. This is 0.4
+ *
  * Revision 1.4  2004/05/28 23:43:50  halfbyte
  * 0.3 versioning
  *
@@ -61,14 +64,16 @@ public class Rasterizer {
 	
 	private boolean landscape = false;
 	private boolean verbose = false;
-	
+	private boolean autoMargins = false;
+	private boolean printCropmarks = false;
+	private boolean printAllCropmarks = false;
 	private com.lowagie.text.Rectangle pageSize = null;
 
 
 	// 	
 	public Rasterizer(String[] args) {
 		
-		System.out.println("Rasterizer V0.3 (c) 2004 JanKrutisch");
+		System.out.println("Rasterizer V0.4 (c) 2004 JanKrutisch");
 		// parse options using getOpt
 		pageSize = null;
 		if (parseOptions(args) == false) return;
@@ -80,7 +85,7 @@ public class Rasterizer {
 			BufferedImage img = loadImage(inputFilename);
 			if (img == null) {
 				// Something went wrong
-				System.out.println("Image file couldn't be opened. aborting.");
+				System.out.println("Image file '" + inputFilename + "' couldn't be opened. aborting.");
 				return;
 			} 
 			// Verbose: output some image information
@@ -101,11 +106,17 @@ public class Rasterizer {
 			}
 			if (landscape) pageSize = pageSize.rotate();
 			
+			
 			colsPerPage = (int)((pageSize.width()-72) / dotSize);
 			rowsPerPage = (int)((pageSize.height()-72) / dotSize);
 			
+			//			correct dotsize for perfect margins
+		
+			verboseOut("page_width: " + (pageSize.width()-72));
+			verboseOut("page_height: " + (pageSize.height()-72));
 			verboseOut("cols_per_page: " + colsPerPage);
 			verboseOut("rows_per_page: " + rowsPerPage);
+			verboseOut("real_dot_size: " + dotSize);
 			
 			BufferedImage dimg = scaleImage(img,xPages);
 			//saveImage("test.jpg",dimg);
@@ -244,14 +255,80 @@ public class Rasterizer {
 	 */
 	private void mapPage(PdfContentByte cb, BufferedImage img, Document document, int xPage, int yPage) {
 		
+		float right, bottom;
+		boolean doRight = true;
+		boolean doBottom = true;
+		boolean doTop = true;
+		boolean doLeft = true;
+		
+		right= document.left() + (colsPerPage * dotSize);
+
+		if (xPage == 0) doLeft  = false;
+		if (yPage == 0) doTop	= false;
+		
 		ColorModel cm = img.getColorModel();
 		int xStart = xPage * colsPerPage;
 		int yStart = yPage * rowsPerPage;
 		int xEnd = (xPage+1) * colsPerPage;
-		if (xEnd > (img.getWidth())) xEnd = (img.getWidth());
+		if (xEnd > (img.getWidth())) {
+			xEnd = (img.getWidth());
+		}
+		if (xEnd >= (img.getWidth())) {
+			doRight=false;
+		}
+		 
 		int yEnd = (yPage+1) * rowsPerPage;
-		if (yEnd >= (img.getHeight()-1)) yEnd = (img.getHeight()-1);
-		//System.out.println("xStart:" + xStart + " yStart:" + yStart + " xEnd:" + xEnd + " yEnd:" + yEnd);
+
+		if (yEnd > (img.getHeight())) {
+			yEnd = (img.getHeight());
+		} 
+		if (yEnd >= (img.getHeight())) {
+			doBottom = false;
+		} 
+
+		if (printCropmarks) {
+		bottom = document.top() - ((yEnd-yStart) * dotSize);
+		
+		cb.setLineWidth(0.2f);
+	   	
+	   	
+	   	if (doTop || printAllCropmarks) {
+			cb.moveTo(document.left(),document.top());
+			cb.lineTo(document.left()+20f,document.top());
+			cb.stroke();
+			cb.moveTo(right-20f,document.top());
+			cb.lineTo(right,document.top());
+			cb.stroke(); 
+	   	}
+	   	if (doBottom || printAllCropmarks) {
+			cb.moveTo(document.left(),bottom);
+			cb.lineTo(document.left()+20f,bottom);
+			cb.stroke();
+			cb.moveTo(right-20f,bottom);
+			cb.lineTo(right,bottom);
+			cb.stroke();			
+	   			
+	   	}
+		if (doLeft || printAllCropmarks) {
+			cb.moveTo(document.left(),document.top());
+			cb.lineTo(document.left(),document.top()-20f);
+			cb.stroke();
+			cb.moveTo(document.left(),bottom+20f);
+			cb.lineTo(document.left(),bottom);
+			cb.stroke();
+
+		}
+		if (doRight || printAllCropmarks) {
+			cb.moveTo(right,document.top());
+			cb.lineTo(right,document.top()-20f);
+			cb.stroke();
+			cb.moveTo(right,bottom+20f);
+			cb.lineTo(right,bottom);
+			cb.stroke();
+		}	   	
+		
+
+		} // printCropmarks
 
 		// Looping over all Pixels of the page
 		for(int x=0;x<(xEnd-xStart);x++) {
@@ -292,7 +369,7 @@ public class Rasterizer {
 					// Set color
 					cb.setRGBColorFillF(0f,0f,0f);
 					// create circle path
-					cb.circle((dotSize*x)+document.left(),document.top()-dotSize*y,r);
+					cb.circle((dotSize*x)+document.left()+(dotSize/2),document.top()-(dotSize/2)-(dotSize*y),r);
 					// fill path
 					cb.fill();
 				}
@@ -305,13 +382,18 @@ public class Rasterizer {
 	 * Parse Commandline Options using GNU Getopt.
 	 */	
 	private boolean parseOptions(String[] args) {
-		Getopt g = new Getopt("Rasterizer", args, "p:s:d:lvh");
+		Getopt g = new Getopt("Rasterizer", args, "p:s:d:c::lvh");
 		int c;
 		String arg;
 		while((c= g.getopt()) != -1) {
 			switch(c) {
+				case 'c':
+					printCropmarks = true;
+					if ("all".equals(g.getOptarg())) {
+						printAllCropmarks = true;
+					}
+				break;
 				case 'l':
-					// NOT IMPLEMENTED, PUT PARSED
 					landscape = true;
 					break;
 				case 'v':
@@ -379,6 +461,8 @@ public class Rasterizer {
 		System.out.println("-p : Number of horizontal pages (vertical will be chosen according to aspect ratio of source image)");
 		System.out.println("-l : Use Pages in Landscape");
 		System.out.println("-s : Paper Size. Allowed Values: A4, A3, LETTER, LEGAL");
+		System.out.println("-c : Print Cropmarks intelligently. use -call for forced cropmarks");				
+		System.out.println("-d : Dotsize in pt. Defaults to 10pt");				
 		System.out.println("-h : The stuff you are reading right now. No Action.");
 		System.out.println("-v : Verbose output");
 		System.out.println("inputfile  : Input file (.jpeg, .gif, .png)");
