@@ -269,16 +269,20 @@ public class RasterizerGui implements ActionListener{
 	        }
 		}
 		if (event.getActionCommand().equals("PDFFILE")) {
-			int returnVal = imageChooser.showOpenDialog(window);
+			int returnVal = pdfChooser.showSaveDialog(window);
 
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            pdfFile = imageChooser.getSelectedFile();
+	            pdfFile = pdfChooser.getSelectedFile();
 	            if (pdfFile.exists()) {
 	            	if (JOptionPane.showConfirmDialog(window,"Datei vorhanden.\n ?berschreiben?","Datei vorhanden",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE)==JOptionPane.YES_OPTION) {
 	            		pdfFileTextField.setText(pdfFile.toString());
 	            	}
+	            } else {
+	            	pdfFileTextField.setText(pdfFile.toString());
 	            }
 	            
+	        } else {
+	        	logger.log("FR.option:" + returnVal);
 	        }
 		}
 		
