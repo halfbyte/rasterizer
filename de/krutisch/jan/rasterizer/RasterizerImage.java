@@ -24,6 +24,7 @@ public class RasterizerImage {
 	static BufferedImage originalImage,rasterImage;
 	static int cropX,cropY,cropW,cropH;
 	static ColorModel cm;
+	static EventLogger logger;
 	
 	
 	public static final int WIDTH = 0,HEIGHT=1;
@@ -34,9 +35,10 @@ public class RasterizerImage {
 	}
 	
 	
-	RasterizerImage getInstance() {
+	static RasterizerImage getInstance(EventLogger l) {
 		if (me==null)
 			me = new RasterizerImage();
+			logger = l;
 		return me;
 	}
 	
@@ -70,11 +72,23 @@ public class RasterizerImage {
 		return dimg;
 	}
 	int getOriginalImageSize(int orientation) {
+		if (originalImage == null) return 0;
 		switch(orientation) {
 			case WIDTH:
 				return originalImage.getWidth();
 			case HEIGHT:
 				return originalImage.getHeight();
+			default:
+				return 0;
+		}
+	}
+	int getRasterImageSize(int orientation) {
+		if (rasterImage == null) return 0;
+		switch(orientation) {
+			case WIDTH:
+				return rasterImage.getWidth();
+			case HEIGHT:
+				return rasterImage.getHeight();
 			default:
 				return 0;
 		}
@@ -94,6 +108,9 @@ public class RasterizerImage {
 	}
 	boolean setRasterImageSize(int w, int h) {
 		if (originalImage == null) return false;
+		logger.log(EventLogger.VERBOSE,"Resizing Image");
+		logger.log(EventLogger.VERBOSE,"Width: "+ w);
+		logger.log(EventLogger.VERBOSE,"Height: "+ h);
 		Color bgColor = new Color(0,0,0);
 		rasterImage = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
 		Graphics2D graphics2D = rasterImage.createGraphics();

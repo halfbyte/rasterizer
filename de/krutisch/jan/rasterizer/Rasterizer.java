@@ -20,6 +20,9 @@ package de.krutisch.jan.rasterizer;
  * $Id$
  * 
  * $Log$
+ * Revision 1.7  2004/09/11 12:24:09  halfbyte
+ * Working Phase, only CLI
+ *
  * Revision 1.6  2004/09/09 18:05:36  halfbyte
  * Modified -c, now stands for experimental color support (using
  * the rasterbator approach).
@@ -92,65 +95,38 @@ public class Rasterizer {
 		
 		System.out.println("Rasterizer " + VERSION + "(c) JanKrutisch");
 		// parse options using getOpt
-		pageSize = null;
+		pageSize = PageSize.A4;
 		if (parseOptions(args) == false) return;
 		
 		// get Time for performance measurement
 		long startTime = new Date().getTime();
-		try {
-			// Load original image.
-			BufferedImage img = loadImage(inputFilename);
-			if (img == null) {
-				// Something went wrong
-				System.out.println("Image file '" + inputFilename + "' couldn't be opened. aborting.");
-				return;
-			} 
-			// Verbose: output some image information
-			verboseOut("-Source image opened-");
-			verboseOut("width:"+img.getWidth());
-			verboseOut("height:"+img.getHeight());
-			
-			/*
-			 * scale image. note that we probably need to expand
-			 * the parameter set if we want the user to be able to
-			 * scale by X OR Y.
-			 *
-			*/
-			
-			
-			if (pageSize == null) {
-				pageSize = PageSize.A4;
-			}
-			if (landscape) pageSize = pageSize.rotate();
-			
-			
-			colsPerPage = (int)((pageSize.width()-72) / dotSize);
-			rowsPerPage = (int)((pageSize.height()-72) / dotSize);
-			
-			//			correct dotsize for perfect margins
 		
-			verboseOut("page_width: " + (pageSize.width()-72));
-			verboseOut("page_height: " + (pageSize.height()-72));
-			verboseOut("cols_per_page: " + colsPerPage);
-			verboseOut("rows_per_page: " + rowsPerPage);
-			verboseOut("real_dot_size: " + dotSize);
-			
-			BufferedImage dimg = scaleImage(img,xPages);
-			//saveImage("test.jpg",dimg);
-			verboseOut("-Converting-");
-			
-			// Map image global function.
-			int pages = mapImage(dimg);
-			
-			// performance measurements again.
-			
-			long fullTime = new Date().getTime() - startTime;
-			// final output
-			System.out.println( (pages) + " Pages (" + (dimg.getWidth()*dimg.getHeight()) + " Rasterdots) written to " + outputFilename + "\ndone in " + fullTime + " Milliseconds.");
-			
-		} catch (Exception e) {
-			System.out.println(e);
+		CliLogger logger = new CliLogger();
+		if (verbose) logger.setLogLevel(EventLogger.VERBOSE);
+		
+		RasterizerImage ri = RasterizerImage.getInstance(logger);
+		RasterizerPdf rp = RasterizerPdf.getInstance(logger);
+		
+		if (!ri.loadImageFromFile(inputFilename)) {
+			System.out.println("Image file '" + inputFilename + "' couldn't be opened. aborting.");
+			return;
 		}
+		rp.setOutputFile(outputFilename);
+		if (printColor) {
+			rp.setColorMode(RasterizerPdf.SIMPLECOLOR);
+		}
+		rp.setPageSize(pageSize);
+		rp.setDotSize(dotSize);
+		
+		if (printAllCropmarks) {
+			rp.setCropmarks(RasterizerPdf.ALLCROPMARKS);
+		} else if (printCropmarks) rp.setCropmarks(RasterizerPdf.CROPMARKS);
+		rp.setHorizontalPages(xPages);
+		RasterThread rt = new RasterThread(ri,rp,logger);
+		rt.start();
+		logger.log(EventLogger.VERBOSE,"detached");
+		
+		long fullTime = new Date().getTime() - startTime;
 		
 	}
 
@@ -181,224 +157,6 @@ public class Rasterizer {
 	/*
 	 * Image scaling method.
 	 */
-	
-	private BufferedImage scaleImage(BufferedImage img,int xPages) {
-		
-		// calculate new width and height
-		
-		int w2 = colsPerPage * xPages;
-		// scaling by keeping aspect ratio intact.
-		int h2 = (int)((float)img.getHeight()/((float)img.getWidth()/(float)w2));
-
-		verboseOut("-Rescaling image-");
-		verboseOut("width:"+w2);
-		verboseOut("height:"+h2);
-		
-		// creating destination image space.
-		BufferedImage dimg = new BufferedImage(w2,h2,BufferedImage.TYPE_INT_RGB);
-		// get 2d reference.
-		Graphics2D graphics2D = dimg.createGraphics();
-		// Set rendering mode to bilinear interpolation
-		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-		RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		// scale image by drawing into the new image
-		graphics2D.drawImage(img, 0, 0, w2, h2, null);
-		// returning the new image in the correct size
-		return dimg;
-	}
-
-
-	/*
-	 * Map Image. The core function.
-	 */
-	private int mapImage(BufferedImage dimg) {
-		try {
-			// calculate number of vertical pages. Note that this
-			// needs to change when the user should be able to
-			// specify both X and Y pages 
-						
-			int yPages = (int)Math.ceil((double)dimg.getHeight() / (double)rowsPerPage);	
-
-			
-			// Get iText document
-			Document document = new Document(pageSize);
-			// Get Writer. Can cause filenotfound exception 
-			// if document is in use (by, e.g. acrobat reader)
-			
-			PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputFilename));
-			
-			// Signalling opening.
-			document.open();
-			
-			// Get Stream for raw gfx.
-			PdfContentByte cb = writer.getDirectContent();
-		
-			/*
-			 * loop through all pages. Behaviour is like
-			 * Rasterbator:
-			 * 0 1 2 3
-			 * 4 5 6 7
-			 * 8 9 ...
-			 */  
-			
-			for(int yPage=0;yPage<yPages;yPage++) {
-				for(int xPage=0;xPage<xPages;xPage++) {
-					verboseOut("-Page: " + (xPage + yPage*xPages) + "-");
-					// for heavens sake, document needs something on 
-					// the page (not done by ContentByte)
-					document.add(new Paragraph(""));
-					// map one page.
-					mapPage(cb,dimg,document,xPage,yPage);
-					// new page					
-					document.newPage();
-				}
-				// new Page
-				document.newPage();
-			}
-			verboseOut("writing file...");
-			// closing document and writing content to disk
-			document.close();
-			// Return number of pages written.
-			return xPages * yPages;
-		} catch(Exception e) {
-			System.out.println(e);
-			return 0;
-		}
-
-	}
-
-	/*
-	 * Mapping one page.
-	 */
-	private void mapPage(PdfContentByte cb, BufferedImage img, Document document, int xPage, int yPage) {
-		
-		float right, bottom;
-		boolean doRight = true;
-		boolean doBottom = true;
-		boolean doTop = true;
-		boolean doLeft = true;
-		
-		right= document.left() + (colsPerPage * dotSize);
-
-		if (xPage == 0) doLeft  = false;
-		if (yPage == 0) doTop	= false;
-		
-		ColorModel cm = img.getColorModel();
-		int xStart = xPage * colsPerPage;
-		int yStart = yPage * rowsPerPage;
-		int xEnd = (xPage+1) * colsPerPage;
-		if (xEnd > (img.getWidth())) {
-			xEnd = (img.getWidth());
-		}
-		if (xEnd >= (img.getWidth())) {
-			doRight=false;
-		}
-		 
-		int yEnd = (yPage+1) * rowsPerPage;
-
-		if (yEnd > (img.getHeight())) {
-			yEnd = (img.getHeight());
-		} 
-		if (yEnd >= (img.getHeight())) {
-			doBottom = false;
-		} 
-
-		if (printCropmarks) {
-		bottom = document.top() - ((yEnd-yStart) * dotSize);
-		
-		cb.setLineWidth(0.2f);
-	   	
-	   	
-	   	if (doTop || printAllCropmarks) {
-			cb.moveTo(document.left(),document.top());
-			cb.lineTo(document.left()+20f,document.top());
-			cb.stroke();
-			cb.moveTo(right-20f,document.top());
-			cb.lineTo(right,document.top());
-			cb.stroke(); 
-	   	}
-	   	if (doBottom || printAllCropmarks) {
-			cb.moveTo(document.left(),bottom);
-			cb.lineTo(document.left()+20f,bottom);
-			cb.stroke();
-			cb.moveTo(right-20f,bottom);
-			cb.lineTo(right,bottom);
-			cb.stroke();			
-	   			
-	   	}
-		if (doLeft || printAllCropmarks) {
-			cb.moveTo(document.left(),document.top());
-			cb.lineTo(document.left(),document.top()-20f);
-			cb.stroke();
-			cb.moveTo(document.left(),bottom+20f);
-			cb.lineTo(document.left(),bottom);
-			cb.stroke();
-
-		}
-		if (doRight || printAllCropmarks) {
-			cb.moveTo(right,document.top());
-			cb.lineTo(right,document.top()-20f);
-			cb.stroke();
-			cb.moveTo(right,bottom+20f);
-			cb.lineTo(right,bottom);
-			cb.stroke();
-		}	   	
-		
-
-		} // printCropmarks
-
-		// Looping over all Pixels of the page
-		for(int x=0;x<(xEnd-xStart);x++) {
-			for (int y=0;y<(yEnd-yStart);y++) {
-				// Get color value of the pixel
-				int color = img.getRGB(x+xStart,y+yStart);
-				// calculating gray value
-				Color pdfColor = null;
-				if (printColor) {
-					pdfColor = new Color(cm.getRed(color),cm.getGreen(color),cm.getBlue(color));
-				} else {
-					pdfColor = new Color(0,0,0);
-				}
-				int value = cm.getRed(color);
-				value += cm.getGreen(color);
-				value += cm.getBlue(color);
-				value /= 3;
-				/*
-				
-				To trace possible errors, one can generate a
-				grayscale image. This is setting the pixel to
-				a grayscale value:
-
-					int rgb = value + (value*0x100) + (value*0x10000);
-					img.setRGB(x,y,rgb);
- 				*/
- 				// value trickstery for calculating the circle 
- 				// radius. should be done in a method to be able
- 				// to create different shapes (that need different values)
- 				value *= 120;
-				value /= 0xFF;
-				value = 120 - value;
-				// range check.	
-				if (value<0) value = 0;
-				
-				
-				float r = (float)Math.sqrt(value / Math.PI);
-				r /= 10f;
-				r *= dotSize;
-				
-				// if radius is >0 then draw circle. should be changed
-				// to allow different shapes.
-				if (r>0f) {
-					// Set color
-					cb.setColorFill(pdfColor);
-					// create circle path
-					cb.circle((dotSize*x)+document.left()+(dotSize/2),document.top()-(dotSize/2)-(dotSize*y),r);
-					// fill path
-					cb.fill();
-				}
-			}		
-		}
-	}
 	
 
 	/*
@@ -497,47 +255,16 @@ public class Rasterizer {
 	}
 	
 	/*
-	 * Loading Image 
-	 */
-	private BufferedImage loadImage(String filename) {
-		try {
-			File f = new File(filename);
-			BufferedImage bi = ImageIO.read(f);
-			return bi;			
-		} catch(Exception e) {
-			return null;
-		}
-	}
-	/*
-	 * Save Image. Can be used to output preview image of the
-	 * scaled, grayed temp-image.
-	 * 
-	 */
-	private void saveImage(String filename,BufferedImage img) {
-		// Use a MediaTracker to fully load the image.
-		try {
-			File f = new File(filename);
-			ImageIO.write(img,"jpg",f);
-			return;
-		} catch(Exception e) {
-			return;
-		}
-	}
-	/*
-	 * Wrapper for outputs that should only be shown 
-	 * when the user wants verbose output.
-	 */
-	private void verboseOut(String line) {
-		if (verbose) {
-			System.out.println(line);
-		}
-		
-	}
-	/*
 	 * main - static start method. Only calls constructor.
 	 */
 	public static void main(String[] args) {
 		Rasterizer myRasterizer = new Rasterizer(args);	
 	}
-
+	
+	public class CliLogger extends EventLogger {
+		public void log(String msg) {
+			System.out.println(msg);
+		}
+	}
 }
+
