@@ -1,0 +1,42 @@
+Rasterizer-GUI
+
+Diese Grafische Oberfläche hat die selben einfachen Features, wie die
+Kommandozeilenversion. 
+
+Einfach die rasterizergui.exe ausführen. 
+Die Oberfläche erscheint (und sollte weitestgehend selbserklärend sein).
+
+Die Software wurde unter der GNU GP-Lizenz veröffentlicht. Der Lizenztext
+ist in der Datei "Copying.lib" abgelegt, die Teil dieser Veröffentlichung 
+ist. Der Quelltext des Programms ist unter src\ mit enthalten. Ran da :)
+
+Auf eigene Gefahr verwenden.
+
+Viel Spaß,
+
+Jan
+
+*Web-Ressourcen*
+
+Offizielle Webseite: 		http://www.rasterizer.de
+Offizielles Supportforum:	http://www.rasterizer.de/forum/
+
+Das "Original", der Rasterbator: http://homokaasu.org/rasterbator/
+
+*AUTOR*
+
+Jan Krutisch ist Interactive Media Developer (IMD) bei AOL Deutschland. Er
+fotografiert gern und druckt die Fotos gern groß aus. Sehr groß. (Das bisher
+größte Bild hat 40 DIN A4 Seiten und ist ein Bild des AOL Drachenboot-Teams)
+
+Email an Jan @ http://jan.krutisch.de/index.php?contact
+
+Fühl Dich frei, Vorschläge, Probleme etc. zu senden, benutze aber bitte
+das Forum @ http://www.rasterizer.de/forum/
+
+*USE CASES*
+
+Wenn Sie dieses Programm für kommerzielle Zwecke nutzen (was nicht verboten
+ist), informieren Sie mich doch bitte kurz per Email (ich bin neugierig).
+Ich bin auch interessiert an Photos von gerasterten Bildern und deren
+Einsatz.
