@@ -3,8 +3,6 @@
 	<name>GreatRasterizer</name>
 	<comment></comment>
 	<projects>
-		<project>GetOpt</project>
-		<project>iTextfromSource</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
