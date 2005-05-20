@@ -90,10 +90,10 @@ public class RasterizerPdf {
 	}
 	
 	public void setMargins(float a, float b, float c, float d) {
-		marginTop = a;
+		marginTop = c;
 		marginRight = b;
-		marginBottom = c;
-		marginLeft = d;
+		marginBottom = d;
+		marginLeft = a;
 	}
 	
 	private void mapPage(PdfContentByte cb, RasterizerImage ri, Document document, int xPage, int yPage, int colsPerPage, int rowsPerPage) {

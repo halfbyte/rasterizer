@@ -86,6 +86,7 @@ public class Rasterizer {
 		}
 		rp.setPageSize(pageSize);
 		rp.setDotSize(dotSize);
+		rp.setMargins(36,36,36,36);
 		rp.setLandscape(landscape);
 		
 		if (printAllCropmarks) {

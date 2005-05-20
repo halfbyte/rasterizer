@@ -33,7 +33,7 @@ public class PageFormat {
 		this.marginBottom=0;
 		this.marginLeft=0;
 	}
-	PageFormat(String name,String description,int width,int height) {
+	/*PageFormat(String name,String description,int width,int height) {
 		this.name = name;
 		this.description = description;
 		this.width=width;
@@ -53,10 +53,10 @@ public class PageFormat {
 		this.marginBottom=marginBottom;
 		this.marginLeft=marginLeft;
 	}
-
+	*/
 	public boolean isValid() {
 		boolean isValid = true;
-		/*
+		
 		if (name.length()==0) isValid = false;
 				
 		if (width <= 0) isValid = false;
@@ -68,7 +68,7 @@ public class PageFormat {
 		if (marginRight < 0) isValid = false;
 		if ((marginLeft + marginRight) > width) isValid = false;
 		if ((marginTop + marginBottom) > height) isValid = false;
-		*/
+		
 		return isValid;
 		
 	}
