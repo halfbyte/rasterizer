@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PageFormats>
+	<PageFormat name="A4, No Margins" description="Use this if your printer needs no margins">
+		<Width>595</Width>
+		<Height>842</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="A3, No Margins" description="Use this if your printer needs no margins">
+		<Width>842</Width>
+		<Height>1190</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="A4, Standard Margins" description="Use this if your printer needs normal margins">
+		<Width>595</Width>
+		<Height>842</Height>
+		<Margins>
+			<Top>36</Top>
+			<Bottom>36</Bottom>
+			<Left>36</Left>
+			<Right>36</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="A3, Standard Margins" description="Use this if your printer needs normal margins">
+		<Width>842</Width>
+		<Height>1190</Height>
+		<Margins>
+			<Top>36</Top>
+			<Bottom>36</Bottom>
+			<Left>36</Left>
+			<Right>36</Right>
+		</Margins>
+	</PageFormat>
+
+</PageFormats>

@@ -24,7 +24,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import com.lowagie.text.PageSize;
+//import com.lowagie.text.PageSize;
 import java.util.*;
 import java.net.URL;
 
@@ -70,7 +70,6 @@ public class RasterizerGui implements ActionListener{
 		arrayRes = new PropertyResourceArrayBundle(guires);
 		
 		URL imageURL = RasterizerGui.class.getResource("images/rasterizer.gif");
-		
 		window = new JFrame(guires.getString("windowTitle"));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ImageIcon icon = new ImageIcon(imageURL);
@@ -92,6 +91,10 @@ public class RasterizerGui implements ActionListener{
        
         logger = new TextFieldLogger();
         logger.setLogLevel(EventLogger.VERBOSE);
+        
+        URL pageSizeURL = RasterizerGui.class.getResource("defaultconfig/papersizes.xml");
+		PageFormatContainer pfc = new PageFormatContainer(pageSizeURL,logger);
+        pageFormatComboBox.setModel(new DefaultComboBoxModel(pfc.getVector()));
 		//logger.log(EventLogger.VERBOSE,"Setting up...");
 		ri = RasterizerImage.getInstance(logger);
 		rp = RasterizerPdf.getInstance(logger);
@@ -106,6 +109,18 @@ public class RasterizerGui implements ActionListener{
          * and its contents is to put the contents in a JPanel
          * that has an "empty" border.
          */
+		
+		
+/*
+		PageFormat pf = new PageFormat("---","SEPARATOR",200,200);
+		pfc.add(pf);
+		pf = new PageFormat("A4","A4 ohne Border",595,842);
+		pfc.add(pf);
+		pf = new PageFormat("A3","A3 ohne Border",842,1190);
+		pfc.add(pf);
+		pf = new PageFormat("LEGAL","LEGAL ohne Border",612,1008);
+		pfc.add(pf);
+*/		
         JPanel pane = new JPanel();
         pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
         pane.setBorder(BorderFactory.createEmptyBorder(
@@ -153,7 +168,7 @@ public class RasterizerGui implements ActionListener{
            	pagesLabel.setLabelFor(pagesSpinner);
         	pagePanel.add(pagesLabel);
         	pagePanel.add(pagesSpinner);
-        	pageFormatComboBox = new JComboBox(pageFormatOptions);
+        	pageFormatComboBox = new JComboBox();
         	JLabel pageFormatLabel = new JLabel(guires.getString("pageFormat"));
         	pageFormatLabel.setLabelFor(pageFormatComboBox);
         	pagePanel.add(pageFormatLabel);
@@ -248,11 +263,17 @@ public class RasterizerGui implements ActionListener{
 		
 		rp.setOutputFile(pdfFileTextField.getText());
 		
-		String format = (String)pageFormatComboBox.getSelectedItem();
+		PageFormat pf = (PageFormat)pageFormatComboBox.getSelectedItem();
+		rp.setPageSize(new com.lowagie.text.Rectangle(pf.getWidth(),pf.getHeight()));
+/*		String format = (String)pageFormatComboBox.getSelectedItem();
+		
 		if (format.equals("A4")) rp.setPageSize(PageSize.A4);
 		if (format.equals("A3")) rp.setPageSize(PageSize.A3);
 		if (format.equals("LETTER")) rp.setPageSize(PageSize.LETTER);
 		if (format.equals("LEGAL")) rp.setPageSize(PageSize.LEGAL);
+	*/	
+		
+		rp.setMargins(pf.getMarginLeft(),pf.getMarginRight(),pf.getMarginTop(),pf.getMarginBottom());
 		
 		switch (cropmarkComboBox.getSelectedIndex()) {
 			case 0:

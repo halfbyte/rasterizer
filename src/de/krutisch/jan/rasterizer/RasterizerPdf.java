@@ -33,6 +33,7 @@ public class RasterizerPdf {
 	public static final int NOCOLOR=0,SIMPLECOLOR=1;
 	public static final int NOCROPMARKS=0,CROPMARKS=1,ALLCROPMARKS=2;
 	static JProgressBar progressBar;
+	static float marginTop=0,marginBottom=0,marginLeft=0,marginRight=0;
 	
 	
 	RasterizerPdf() {
@@ -83,6 +84,13 @@ public class RasterizerPdf {
 	}
 	public void setHorizontalPages(int p) {
 		pages = p;
+	}
+	
+	public void setMargins(float a, float b, float c, float d) {
+		marginTop = a;
+		marginRight = b;
+		marginBottom = c;
+		marginLeft = d;
 	}
 	
 	private void mapPage(PdfContentByte cb, RasterizerImage ri, Document document, int xPage, int yPage, int colsPerPage, int rowsPerPage) {
@@ -219,8 +227,8 @@ public class RasterizerPdf {
 		if (pageSize == null) return false;
 		if (landscape) pageSize = pageSize.rotate();
 		
-		int colsPerPage = (int)((pageSize.width()-72) / dotSize);
-		int rowsPerPage = (int)((pageSize.height()-72) / dotSize);
+		int colsPerPage = (int)((pageSize.width()-(marginLeft + marginRight)) / dotSize);
+		int rowsPerPage = (int)((pageSize.height()-(marginTop + marginBottom)) / dotSize);
 		
 		int xSize = colsPerPage * pages;
 		int ySize = (int)((float)ri.getOriginalImageSize(RasterizerImage.HEIGHT)/((float)ri.getOriginalImageSize(RasterizerImage.WIDTH)/(float)xSize));
@@ -230,6 +238,8 @@ public class RasterizerPdf {
 		
 		try {
 			Document document = new Document(pageSize);
+			document.setMargins(marginLeft,marginRight,marginTop,marginBottom);
+			
 			PdfWriter writer = PdfWriter.getInstance(document,file);
 		
 			// Signalling opening.
