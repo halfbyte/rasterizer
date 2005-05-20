@@ -10,7 +10,7 @@
 	<property name="guijar" value="rasterizergui.jar"/>
 	<property name="guijar_nosrc" value="rasterizergui_winexe.jar"/>
 	<property name="clijar" value="rasterizer.jar"/>
-	<property name="jarclasspath" value="lib/itext-1.2.jar"/>	
+	<property name="jarclasspath" value="lib/itext.jar lib/dom4j.jar"/>	
 	<property name="l4j" value="l4j"/>
 	<property name="l4jexe" value="d:/programming/launch4j/bin/launch4j.exe"/>
 	
@@ -30,6 +30,7 @@
 			<fileset dir="${src}">
 				<include name="rasterizer.gif"/>
 				<include name="*.properties"/>
+				<include name="*.xml"/>
 			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="de.krutisch.jan.rasterizer.RasterizerGui"/>
