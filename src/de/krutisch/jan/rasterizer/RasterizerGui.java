@@ -26,7 +26,6 @@ import java.awt.event.*;
 import java.io.File;
 //import com.lowagie.text.PageSize;
 import java.util.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 
