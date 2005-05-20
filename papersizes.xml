@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- this is the user version of the paper size file -->
+<PageFormats>
+	<PageFormat name="User: CD Cover" description="CD cover standard size">
+		<Width>340</Width>
+		<Height>340</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+
+</PageFormats>

@@ -1,26 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- this is the default file inside the package -->
 <PageFormats>
-	<PageFormat name="A4, No Margins" description="Use this if your printer needs no margins">
-		<Width>595</Width>
-		<Height>842</Height>
-		<Margins>
-			<Top>0</Top>
-			<Bottom>0</Bottom>
-			<Left>0</Left>
-			<Right>0</Right>
-		</Margins>
-	</PageFormat>
-	<PageFormat name="A3, No Margins" description="Use this if your printer needs no margins">
-		<Width>842</Width>
-		<Height>1190</Height>
-		<Margins>
-			<Top>0</Top>
-			<Bottom>0</Bottom>
-			<Left>0</Left>
-			<Right>0</Right>
-		</Margins>
-	</PageFormat>
-	<PageFormat name="A4, Standard Margins" description="Use this if your printer needs normal margins">
+	<!-- DIN formats a4-a0 standard margins-->
+	<PageFormat name="[A4, Standard Margins]" description="Use this if your printer needs normal margins">
 		<Width>595</Width>
 		<Height>842</Height>
 		<Margins>
@@ -30,7 +12,7 @@
 			<Right>36</Right>
 		</Margins>
 	</PageFormat>
-	<PageFormat name="A3, Standard Margins" description="Use this if your printer needs normal margins">
+	<PageFormat name="[A3, Standard Margins]" description="Use this if your printer needs normal margins">
 		<Width>842</Width>
 		<Height>1190</Height>
 		<Margins>
@@ -38,6 +20,153 @@
 			<Bottom>36</Bottom>
 			<Left>36</Left>
 			<Right>36</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[A2, Standard Margins]" description="Use this if your printer needs normal margins">
+		<Width>1190</Width>
+		<Height>1684</Height>
+		<Margins>
+			<Top>36</Top>
+			<Bottom>36</Bottom>
+			<Left>36</Left>
+			<Right>36</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[A1, Standard Margins]" description="Use this if your printer needs normal margins">
+		<Width>1684</Width>
+		<Height>2384</Height>
+		<Margins>
+			<Top>36</Top>
+			<Bottom>36</Bottom>
+			<Left>36</Left>
+			<Right>36</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[A0, Standard Margins]" description="Use this if your printer needs normal margins">
+		<Width>2384</Width>
+		<Height>3370</Height>
+		<Margins>
+			<Top>36</Top>
+			<Bottom>36</Bottom>
+			<Left>36</Left>
+			<Right>36</Right>
+		</Margins>
+	</PageFormat>
+	<!-- US formats -->
+	<PageFormat name="[LETTER, Standard Margins]" description="Use this if your printer needs normal margins">
+		<Width>612</Width>
+		<Height>792</Height>
+		<Margins>
+			<Top>36</Top>
+			<Bottom>36</Bottom>
+			<Left>36</Left>
+			<Right>36</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[LEGAL, Standard Margins]" description="Use this if your printer needs normal margins">
+		<Width>612</Width>
+		<Height>1008</Height>
+		<Margins>
+			<Top>36</Top>
+			<Bottom>36</Bottom>
+			<Left>36</Left>
+			<Right>36</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[NOTE, Standard Margins]" description="Use this if your printer needs normal margins">
+		<Width>540</Width>
+		<Height>720</Height>
+		<Margins>
+			<Top>36</Top>
+			<Bottom>36</Bottom>
+			<Left>36</Left>
+			<Right>36</Right>
+		</Margins>
+	</PageFormat>
+	
+	<!-- DIN formats, no margins -->
+	
+	<PageFormat name="[A4, No Margins]" description="Use this if your printer needs no margins">
+		<Width>595</Width>
+		<Height>842</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[A3, No Margins]" description="Use this if your printer needs no margins">
+		<Width>842</Width>
+		<Height>1190</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[A2, No Margins]" description="Use this if your printer needs no margins">
+		<Width>1190</Width>
+		<Height>1684</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[A1, No Margins]" description="Use this if your printer needs no margins">
+		<Width>1684</Width>
+		<Height>2384</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[A0, No Margins]" description="Use this if your printer needs no margins">
+		<Width>2384</Width>
+		<Height>3370</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+	
+	<!-- US formats, no margins -->
+	
+	<PageFormat name="[LETTER, No Margins]" description="Use this if your printer needs no margins">
+		<Width>612</Width>
+		<Height>792</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[LEGAL, No Margins]" description="Use this if your printer needs no margins">
+		<Width>612</Width>
+		<Height>1008</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
+		</Margins>
+	</PageFormat>
+	<PageFormat name="[NOTE, No Margins]" description="Use this if your printer needs no margins">
+		<Width>540</Width>
+		<Height>720</Height>
+		<Margins>
+			<Top>0</Top>
+			<Bottom>0</Bottom>
+			<Left>0</Left>
+			<Right>0</Right>
 		</Margins>
 	</PageFormat>
 

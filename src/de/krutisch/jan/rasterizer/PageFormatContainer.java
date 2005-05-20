@@ -8,6 +8,7 @@ package de.krutisch.jan.rasterizer;
 
 import java.util.Iterator;
 import java.util.Vector;
+import java.io.File;
 import java.net.URL;
 
 import org.dom4j.Document;
@@ -25,9 +26,10 @@ public class PageFormatContainer {
 	private Vector pageFormatList;
 	private EventLogger logger;
 	
-	public PageFormatContainer(URL url,EventLogger logger) {
+	public PageFormatContainer(EventLogger logger) {
+		pageFormatList = new Vector();
 		this.logger = logger;
-		parsePaperSizeXML(url);
+		//parsePaperSizeXML(url);
 	}
 	
 	public PageFormatContainer() {
@@ -40,16 +42,41 @@ public class PageFormatContainer {
 		return pageFormatList;
 	}
 	
-	private void parsePaperSizeXML(URL url) {
-		pageFormatList = new Vector();
+	void parsePaperSizeXML(URL url) {
+		try {
+			SAXReader reader = new SAXReader();
+	        Document document = reader.read(url);
+	        parsePaperSizeXML(document);
+		} catch (Exception e) {
+			logger.log(EventLogger.ERROR,e.getMessage());
+		}
+	}
+	void parsePaperSizeXML(File file) {
+		try {
+			SAXReader reader = new SAXReader();
+	        Document document = reader.read(file);
+	        parsePaperSizeXML(document);
+		} catch (Exception e) {
+			logger.log(EventLogger.ERROR,e.getMessage());
+		}
+	}
+	
+	int getSize() {
+		if (pageFormatList != null) return pageFormatList.size();
+		return 0;
+	}
+	
+	public void parsePaperSizeXML(Document doc) {
+		//pageFormatList = new Vector();
 		
 		logger.log(EventLogger.DEBUG,"Start");
-		Document doc = null;
+		/* Document doc = null;
 		try {
 			doc = this.parse(url);
 		} catch (Exception e) {
 			logger.log(EventLogger.ERROR,"Error:" + e);
 		}
+		*/
 		if (doc!=null) {
 			logger.log(EventLogger.DEBUG,"Doc");
 			Element root = doc.getRootElement();

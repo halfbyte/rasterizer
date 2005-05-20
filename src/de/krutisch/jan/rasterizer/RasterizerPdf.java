@@ -27,6 +27,7 @@ public class RasterizerPdf {
 	static Rectangle pageSize;
 	static int colorMode;
 	static float dotSize;
+	static float rasterHeight,rasterWidth;
 	static int pages;
 	static EventLogger logger;
 	static boolean landscape;
@@ -43,6 +44,8 @@ public class RasterizerPdf {
 		pageSize = PageSize.A4;
 		pages = 3;
 		dotSize = 10f;
+		rasterHeight = 10f;
+		rasterWidth = 10f;
 	}
 	
 	public static RasterizerPdf getInstance(EventLogger l) {
@@ -102,7 +105,7 @@ public class RasterizerPdf {
 		boolean doLeft = true;
 	
 		
-		right= document.left() + (colsPerPage * dotSize);
+		right= document.left() + (colsPerPage * rasterWidth);
 
 		if (xPage == 0) doLeft  = false;
 		if (yPage == 0) doTop	= false;
@@ -127,7 +130,7 @@ public class RasterizerPdf {
 		} 
 
 		if (cropmarks >= CROPMARKS) {
-		bottom = document.top() - ((yEnd-yStart) * dotSize);
+		bottom = document.top() - ((yEnd-yStart) * rasterHeight);
 		
 		cb.setLineWidth(0.2f);
 	   	
@@ -211,7 +214,7 @@ public class RasterizerPdf {
 					// Set color
 					cb.setColorFill(pdfColor);
 					// create circle path
-					cb.circle((dotSize*x)+document.left()+(dotSize/2),document.top()-(dotSize/2)-(dotSize*y),r);
+					cb.circle((rasterWidth*x)+document.left()+(dotSize/2),document.top()-(dotSize/2)-(rasterHeight*y),r);
 					// fill path
 					cb.fill();
 				}
@@ -229,6 +232,12 @@ public class RasterizerPdf {
 		
 		int colsPerPage = (int)((pageSize.width()-(marginLeft + marginRight)) / dotSize);
 		int rowsPerPage = (int)((pageSize.height()-(marginTop + marginBottom)) / dotSize);
+		
+		rasterHeight = (pageSize.height() - (marginTop + marginBottom)) / (float)rowsPerPage;
+		rasterWidth = (pageSize.width() - (marginLeft + marginRight)) / (float)colsPerPage;
+		logger.log(EventLogger.VERBOSE,"Dotsize:" + dotSize);
+		logger.log(EventLogger.VERBOSE,"RasterWidth:" + rasterWidth);
+		logger.log(EventLogger.VERBOSE,"RasterHeight:" + rasterHeight);
 		
 		int xSize = colsPerPage * pages;
 		int ySize = (int)((float)ri.getOriginalImageSize(RasterizerImage.HEIGHT)/((float)ri.getOriginalImageSize(RasterizerImage.WIDTH)/(float)xSize));

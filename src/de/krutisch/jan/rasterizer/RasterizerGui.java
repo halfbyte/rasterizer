@@ -26,6 +26,7 @@ import java.awt.event.*;
 import java.io.File;
 //import com.lowagie.text.PageSize;
 import java.util.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 
@@ -93,7 +94,10 @@ public class RasterizerGui implements ActionListener{
         logger.setLogLevel(EventLogger.VERBOSE);
         
         URL pageSizeURL = RasterizerGui.class.getResource("defaultconfig/papersizes.xml");
-		PageFormatContainer pfc = new PageFormatContainer(pageSizeURL,logger);
+		PageFormatContainer pfc = new PageFormatContainer(logger);
+		pfc.parsePaperSizeXML(new File("papersizes.xml"));
+		pfc.parsePaperSizeXML(pageSizeURL);
+		
         pageFormatComboBox.setModel(new DefaultComboBoxModel(pfc.getVector()));
 		//logger.log(EventLogger.VERBOSE,"Setting up...");
 		ri = RasterizerImage.getInstance(logger);

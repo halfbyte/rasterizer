@@ -7,6 +7,7 @@
 	<property name="res" value="res"/>
 	<property name="dist" location="dist"/>	
 	<property name="readme" value="readme"/>
+	<property name="papersizes" value="papersizes.xml"/>
 	<property name="guijar" value="rasterizergui.jar"/>
 	<property name="guijar_nosrc" value="rasterizergui_winexe.jar"/>
 	<property name="clijar" value="rasterizer.jar"/>
@@ -79,6 +80,9 @@
 			<fileset dir="${readme}">
 				<include name="gpl.txt"/>
 			</fileset>
+			<fileset dir="">
+				<include name="papersizes.xml"/>
+			</fileset>
 		</zip>
 		<exec executable="${l4jexe}" failonerror="true">
 					<arg line="${l4j}/l4j.cfg"/>
@@ -97,6 +101,9 @@
 			<fileset dir="${readme}">
 				<include name="gpl.txt"/>
 			</fileset>
+			<fileset dir="">
+							<include name="papersizes.xml"/>
+			</fileset>
 		</zip>
 		<zip destfile="${dist}/rasterizer_src.zip">
 			<zipfileset dir="${src}" prefix="src"/>
@@ -105,6 +112,9 @@
 				<include name="readme_src.txt"/>
 			</fileset>
 			<zipfileset dir="${lib}" prefix="lib"/>
+				<fileset dir="">
+								<include name="papersizes.xml"/>
+				</fileset>
 		</zip>
 		<delete file="${dist}/rasterizergui.exe"></delete>
 	</target>
