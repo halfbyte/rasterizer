@@ -18,54 +18,81 @@ import org.dom4j.io.SAXReader;
 
 /**
  * @author Jan
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * PageFormatContainer maintains a list (Vector) of all page formats and contains
+ * functions to parse the formats from the paperformats.xml file.
+ * 
  */
 public class PageFormatContainer {
 	private Vector pageFormatList;
 	private EventLogger logger;
 	
+	/**
+	 * Standard construktor, needs an EventLogger to log errors while parsing xml
+	 * @param logger
+	 */
 	public PageFormatContainer(EventLogger logger) {
 		pageFormatList = new Vector();
 		this.logger = logger;
 		//parsePaperSizeXML(url);
 	}
-	
+	/**
+	 * Standard constructor. Not used.
+	 */
 	public PageFormatContainer() {
 		pageFormatList = new Vector();
 	}
+	/**
+	 * Adding a page format to the vector.
+	 * @param format A PageFormat object
+	 */
 	public void add(PageFormat format) {
 		pageFormatList.add(format);
 	}
+	/**
+	 * Returns the vector. can be used to fill a DefaultComboBoxModel
+	 * @return returns the list (Vector) of the contained PageFormat objects
+	 */
 	public Vector getVector() {
 		return pageFormatList;
 	}
-	
+	/**
+	 * Open a papersize xml by URL. Used to read the xml contained in the jar
+	 * @param url URL object (use new URL("url"))
+	 */
 	void parsePaperSizeXML(URL url) {
 		try {
 			SAXReader reader = new SAXReader();
 	        Document document = reader.read(url);
 	        parsePaperSizeXML(document);
-		} catch (Exception e) {
+		} catch (DocumentException e) {
 			logger.log(EventLogger.ERROR,e.getMessage());
 		}
 	}
+	/**
+	 * Open a papersize xml by file. Used to read the user papersizes.xml
+	 * @param file file to open (use new File("filename"))
+	 */
 	void parsePaperSizeXML(File file) {
 		try {
 			SAXReader reader = new SAXReader();
 	        Document document = reader.read(file);
 	        parsePaperSizeXML(document);
-		} catch (Exception e) {
+		} catch (DocumentException e) {
 			logger.log(EventLogger.ERROR,e.getMessage());
 		}
 	}
-	
+	/**
+	 * 
+	 * @return Returns the number of formats contained in the vector.
+	 */
 	int getSize() {
 		if (pageFormatList != null) return pageFormatList.size();
 		return 0;
 	}
-	
+	/**
+	 * The actual parsing method, called with an open Document.
+	 * @param doc XMLDocument to parse the paperFormat from.
+	 */
 	public void parsePaperSizeXML(Document doc) {
 		//pageFormatList = new Vector();
 		
@@ -189,12 +216,13 @@ public class PageFormatContainer {
 	}
 	
 	
-	public Document parse(URL url) throws DocumentException {
+	/*
+	 public Document parse(URL url) throws DocumentException {
         SAXReader reader = new SAXReader();
         Document document = reader.read(url);
         return document;
     }
-
+*/
 	
 	
 }

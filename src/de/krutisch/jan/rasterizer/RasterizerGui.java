@@ -21,6 +21,9 @@
  */
 package de.krutisch.jan.rasterizer;
 import javax.swing.*;         
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -40,6 +43,7 @@ public class RasterizerGui implements ActionListener{
 	//static final String[] colorOptions= {"Schwarz/Weiss","Einfache Farbe"};
 	//static final String[] cropmarkOptions= {"Keine","Smart","Alle"};
 	
+	ImagePreview imagePreview;
 	JTextField imageFileTextField,pdfFileTextField;
 	JButton	imageFileButton,pdfFileButton,startButton,cancelButton;
 	JSpinner pagesSpinner;
@@ -52,6 +56,11 @@ public class RasterizerGui implements ActionListener{
 	JFrame window;
 	JFileChooser imageChooser;
 	JFileChooser pdfChooser;
+	JMenuBar menuBar;
+	JMenu fileMenu;
+	JMenu optionsMenu;
+	JMenu helpMenu;
+	JLabel previewImageName; 
 	
 	RasterizerImage ri;
 	RasterizerPdf rp;
@@ -62,6 +71,7 @@ public class RasterizerGui implements ActionListener{
 	RasterThread thread;
 	ResourceBundle guires;
 	PropertyResourceArrayBundle arrayRes;
+	String pdfPath,imagePath;
 	
 	
 	RasterizerGui() {
@@ -102,7 +112,13 @@ public class RasterizerGui implements ActionListener{
 		ri = RasterizerImage.getInstance(logger);
 		rp = RasterizerPdf.getInstance(logger);
 		rp.setProgressBar(overallProgressBar);
-		
+		boolean landscape = false;
+		if (landscapeCheckBox.getSelectedObjects()!=null) {
+			landscape = true;
+		} else {
+			landscape = false;
+		}
+		imagePreview.setPageData((PageFormat)pageFormatComboBox.getSelectedItem(),((SpinnerNumberModel)pagesSpinner.getModel()).getNumber().intValue(),landscape);
 	}
 	
 	public Component createComponents() {
@@ -112,6 +128,56 @@ public class RasterizerGui implements ActionListener{
          * and its contents is to put the contents in a JPanel
          * that has an "empty" border.
          */
+		
+		
+		menuBar = new JMenuBar();
+		window.setJMenuBar(menuBar);
+		fileMenu = new JMenu();
+		menuBar.add(fileMenu);
+		fileMenu.setText(guires.getString("menuFile"));
+		{
+			JMenuItem openFile = new JMenuItem();
+			fileMenu.add(openFile);
+			openFile.setText(guires.getString("menuFileOpenImage"));
+			openFile.setActionCommand("IMAGEFILE");
+			openFile.addActionListener(this);
+		}
+		{
+			JMenuItem exitFile = new JMenuItem();
+			fileMenu.add(exitFile);
+			exitFile.setText(guires.getString("menuFileQuit"));
+			exitFile.setActionCommand("QUIT");
+			exitFile.addActionListener(this);
+		}
+		optionsMenu = new JMenu();
+		menuBar.add(optionsMenu);
+		optionsMenu.setText(guires.getString("menuOptions"));
+		{
+			JMenuItem optPapersizes = new JMenuItem();
+			optionsMenu.add(optPapersizes);
+			optPapersizes.setText(guires.getString("menuOptionsConfigurePaperSizes"));
+			optPapersizes.setEnabled(false);
+		}
+		
+		helpMenu = new JMenu();
+		menuBar.add(helpMenu);
+		helpMenu.setText(guires.getString("menuHelp"));
+		{
+			JMenuItem helpHelp = new JMenuItem();
+			helpMenu.add(helpHelp);
+			helpHelp.setText(guires.getString("menuHelpHelp"));
+			helpHelp.setEnabled(false);
+		}
+		{
+			JMenuItem helpAbout = new JMenuItem();
+			helpMenu.add(helpAbout);
+			helpAbout.setText(guires.getString("menuHelpAbout"));
+			//helpAbout.setEnabled(false);
+			helpAbout.setActionCommand("ABOUT");
+			helpAbout.addActionListener(this);
+		}
+		
+		
 		
 		
 /*
@@ -133,7 +199,7 @@ public class RasterizerGui implements ActionListener{
                                         5) //right
                                         );
         
-        filesPanel = new JPanel(new GridLayout(0,3));
+        filesPanel = new JPanel(new GridLayout(0,2));
         	filesPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder(guires.getString("files")),
                 BorderFactory.createEmptyBorder(5,5,5,5)));
@@ -142,24 +208,47 @@ public class RasterizerGui implements ActionListener{
         	imageLabel.setLabelFor(imageFileTextField);
         	filesPanel.add(imageLabel);
         	filesPanel.add(imageFileTextField);
+        	/*
         	imageFileButton = new JButton(guires.getString("fileSelect"));
         	imageFileButton.setActionCommand("IMAGEFILE");
         	imageFileButton.addActionListener(this);
         	filesPanel.add(imageFileButton);
-        	
+        	*/
         	JLabel pdfLabel = new JLabel(guires.getString("pdf"));
         	pdfFileTextField = new JTextField();
         	pdfLabel.setLabelFor(pdfFileTextField);
         	filesPanel.add(pdfLabel);
         	filesPanel.add(pdfFileTextField);
-        	pdfFileButton = new JButton(guires.getString("fileSelect"));
-        	pdfFileButton.setActionCommand("PDFFILE");
-        	pdfFileButton.addActionListener(this);
-        	filesPanel.add(pdfFileButton);
+//        	pdfFileButton = new JButton(guires.getString("fileSelect"));
+//        	pdfFileButton.setActionCommand("PDFFILE");
+//        	pdfFileButton.addActionListener(this);
+//        	filesPanel.add(pdfFileButton);
         	
         	
-        	
-        pane.add(filesPanel);
+        JPanel upperPane = new JPanel(new GridLayout(0,2));
+        pane.add(upperPane);
+        //pane.add(filesPanel);
+        
+        JPanel optionsPane = new JPanel();
+        optionsPane.setLayout(new BoxLayout(optionsPane, BoxLayout.PAGE_AXIS));
+
+        JPanel previewPane = new JPanel();
+        previewPane.setLayout(new BoxLayout(previewPane, BoxLayout.PAGE_AXIS));
+        previewPane.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(guires.getString("preview")),
+                BorderFactory.createEmptyBorder(5,5,5,5)));
+        
+        previewImageName = new JLabel(guires.getString("noImageInPreview"));
+        previewImageName.setText(guires.getString("noImageInPreview"));
+        previewPane.add(previewImageName);
+        upperPane.add(previewPane);
+        
+        
+        
+        imagePreview = new ImagePreview();
+        previewPane.add(imagePreview);
+        
+        upperPane.add(optionsPane);
         
         pagePanel = new JPanel(new GridLayout(0,2));
         pagePanel.setBorder(BorderFactory.createCompoundBorder(
@@ -168,17 +257,33 @@ public class RasterizerGui implements ActionListener{
         	JLabel pagesLabel = new JLabel(guires.getString("horizontalPages"));
         	pagesSpinner = new JSpinner();
         	pagesSpinner.setModel(new SpinnerNumberModel(3,1,100,1));
+        	pagesSpinner.addChangeListener(new ChangeListener() {
+        		public void stateChanged(ChangeEvent e) {
+        			boolean landscape = false;
+        			if (landscapeCheckBox.getSelectedObjects()!=null) {
+        				landscape = true;
+        			} else {
+        				landscape = false;
+        			}
+        			System.out.println("fired:" + landscape);
+        			imagePreview.setPageData((PageFormat)pageFormatComboBox.getSelectedItem(),((SpinnerNumberModel)pagesSpinner.getModel()).getNumber().intValue(),landscape);        			
+        		}
+        	});
            	pagesLabel.setLabelFor(pagesSpinner);
         	pagePanel.add(pagesLabel);
         	pagePanel.add(pagesSpinner);
         	pageFormatComboBox = new JComboBox();
+        	pageFormatComboBox.addActionListener(this);
+        	pageFormatComboBox.setActionCommand("UPDATEPREVIEW");
         	JLabel pageFormatLabel = new JLabel(guires.getString("pageFormat"));
         	pageFormatLabel.setLabelFor(pageFormatComboBox);
         	pagePanel.add(pageFormatLabel);
         	pagePanel.add(pageFormatComboBox);
         	landscapeCheckBox = new JCheckBox(guires.getString("landscapeFormat"));
+        	landscapeCheckBox.addActionListener(this);
+        	landscapeCheckBox.setActionCommand("UPDATEPREVIEW");
         	pagePanel.add(landscapeCheckBox);
-        pane.add(pagePanel);
+        optionsPane.add(pagePanel);
 
         stylePanel = new JPanel(new GridLayout(0,2));
         stylePanel.setBorder(BorderFactory.createCompoundBorder(
@@ -202,14 +307,14 @@ public class RasterizerGui implements ActionListener{
         	stylePanel.add(cropmarkComboBox);
 
         	
-        pane.add(stylePanel);
+        optionsPane.add(stylePanel);
 
         buttonPanel = new JPanel(new GridLayout(0,2));
         startButton = new JButton(guires.getString("startRasterize"));
         startButton.setMnemonic(KeyEvent.VK_I);
         startButton.setActionCommand("START");
         startButton.addActionListener(this);
-       
+        startButton.setEnabled(false);
         buttonPanel.add(startButton);
         JButton cancelButton = new JButton(guires.getString("cancel"));
         cancelButton.setActionCommand("CANCEL");
@@ -239,15 +344,16 @@ public class RasterizerGui implements ActionListener{
         scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE,Integer.MAX_VALUE));
 
         pane.add(scrollPane);
-        pane.setMinimumSize(new Dimension(200,600));
-        pane.setPreferredSize(new Dimension(400,600));
-        pane.setMaximumSize(new Dimension(400,800));
+        pane.setMinimumSize(new Dimension(400,600));
+        pane.setPreferredSize(new Dimension(600,600));
+        pane.setMaximumSize(new Dimension(600,800));
         
         return pane;
     }
 
 	private void setOptions() {
-		ri.loadImageFromFile(imageFileTextField.getText());
+		//ri.loadImageFromFile(imageFileTextField.getText());
+		
 		if (colorComboBox.getSelectedIndex()==1) {
 			rp.setColorMode(RasterizerPdf.SIMPLECOLOR);
 		} else {
@@ -264,7 +370,8 @@ public class RasterizerGui implements ActionListener{
 			rp.setLandscape(false);
 		}
 		
-		rp.setOutputFile(pdfFileTextField.getText());
+		//rp.setOutputFile(pdfFileTextField.getText());
+		rp.setOutputFile(pdfPath);
 		
 		PageFormat pf = (PageFormat)pageFormatComboBox.getSelectedItem();
 		rp.setPageSize(new com.lowagie.text.Rectangle(pf.getWidth(),pf.getHeight()));
@@ -302,12 +409,52 @@ public class RasterizerGui implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent event) {
+
+		if (event.getActionCommand().equals("UPDATEPREVIEW")) {
+			boolean landscape = false;
+			if (landscapeCheckBox.getSelectedObjects()!=null) {
+				landscape = true;
+			} else {
+				landscape = false;
+			}
+			imagePreview.setPageData((PageFormat)pageFormatComboBox.getSelectedItem(),((SpinnerNumberModel)pagesSpinner.getModel()).getNumber().intValue(),landscape);
+		}
 		
+		if (event.getActionCommand().equals("QUIT")) {
+			System.exit(0);
+		}
+		if (event.getActionCommand().equals("ABOUT")) {
+			JOptionPane.showMessageDialog(window,guires.getString("aboutScreen"));
+		}
+
 		if (event.getActionCommand().equals("START")) {
+
+		
+			int returnVal = pdfChooser.showSaveDialog(window);
+
+	        if (returnVal == JFileChooser.APPROVE_OPTION) {
+	            pdfFile = pdfChooser.getSelectedFile();
+	            String pdfFilePath = pdfFile.getAbsolutePath();
+	            
+	            if (pdfFile.exists()) {
+	            	if (JOptionPane.showConfirmDialog(window,guires.getString("fileExistsOverwrite"),guires.getString("fileExistsTitle"),JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE)==JOptionPane.NO_OPTION) {
+	            		pdfFilePath = "";
+	            	}
+	            }
+	            if (!pdfFilePath.toLowerCase().endsWith(".pdf")) {
+	            	pdfFilePath += ".pdf";
+	            }
+	            //pdfFileTextField.setText(pdfFilePath);
+	            pdfPath = pdfFilePath;
+	            
+	        }
+			
+			
 			if (!validateOptions()) { 
 				JOptionPane.showMessageDialog(window,guires.getString("missingParameters"));
 				return;
 			}
+			
 			setOptions();
 			switchGuiRunning();
 			thread = new RasterThread(ri,rp,logger);
@@ -331,10 +478,19 @@ public class RasterizerGui implements ActionListener{
 
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            imageFile = imageChooser.getSelectedFile();
-	            imageFileTextField.setText(imageFile.getAbsolutePath());
+	            //imageFileTextField.setText(imageFile.getAbsolutePath());
+	            imagePath = imageFile.getAbsolutePath();
+	            
+	            previewImageName.setText(imageFile.getName());
+	            ri.loadImageFromFile(imagePath);
+	            imagePreview.setImage(ri.getOriginalImage());
+	            startButton.setEnabled(true);
 	        }
+	        
 		}
+		/*
 		if (event.getActionCommand().equals("PDFFILE")) {
+		
 			int returnVal = pdfChooser.showSaveDialog(window);
 
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -353,17 +509,19 @@ public class RasterizerGui implements ActionListener{
 	            
 	        } 
 		}
-		
+		*/
 		
 	}
 
 	public boolean validateOptions() {
 		logger.log(EventLogger.VERBOSE,"Validating Options:");
-		if (imageFileTextField.getText().length()==0) {
+		//if (imageFileTextField.getText().length()==0) {
+		if (imagePath.length()==0) {
 			logger.log(EventLogger.VERBOSE,"empty filename (Image)");
 			return false;
 		}
-		if (pdfFileTextField.getText().length()==0) {
+		//if (pdfFileTextField.getText().length()==0) {
+		if (pdfPath.length()==0) {
 			logger.log(EventLogger.VERBOSE,"empty filename (Pdf)");
 			return false;
 		}

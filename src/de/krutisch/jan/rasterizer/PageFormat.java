@@ -1,16 +1,14 @@
 /*
  * Created on 20.05.2005
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package de.krutisch.jan.rasterizer;
 
 /**
- * @author Jan
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @author Jan Krutisch
+ * PageFormat is a class representation of a paper format as laid out in paperformats.xml
+ * This includes a width, a height and four margins.
+ *  
  */
 public class PageFormat {
 	
@@ -24,7 +22,10 @@ public class PageFormat {
 	private String name;
 	private String description;
 	
-	
+	/**
+	 * Standard constructor doing basicly nothing (initializing all values) 
+	 *
+	 */
 	PageFormat() {
 		this.width=0;
 		this.height=0;
@@ -33,27 +34,11 @@ public class PageFormat {
 		this.marginBottom=0;
 		this.marginLeft=0;
 	}
-	/*PageFormat(String name,String description,int width,int height) {
-		this.name = name;
-		this.description = description;
-		this.width=width;
-		this.height=height;
-		this.marginTop=0;
-		this.marginRight=0;
-		this.marginBottom=0;
-		this.marginLeft=0;
-	}
-	PageFormat(String name,String description,int width,int height, int marginTop, int marginRight,int marginBottom,int marginLeft) {
-		this.name = name;
-		this.description = description;
-		this.width=width;
-		this.height=height;
-		this.marginTop=marginTop;
-		this.marginRight=marginRight;
-		this.marginBottom=marginBottom;
-		this.marginLeft=marginLeft;
-	}
-	*/
+	/**
+	 * Tests if all values are filled out in a useful manner. Used after parsing in values 
+	 * from the user paperformats.xml
+	 * @return true if the paperformat seems valid, false if not.
+	 */
 	public boolean isValid() {
 		boolean isValid = true;
 		
@@ -169,7 +154,11 @@ public class PageFormat {
 	public void setName(String name) {
 		this.name = name;
 	}
+	/**
+	 * Returns the name field, used for easy ComboBox fill
+	 * @return Returns the name;
+	 */
 	public String toString() {
-		return name;
+		return this.getName();
 	}
 }

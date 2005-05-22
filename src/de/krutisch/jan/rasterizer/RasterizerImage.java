@@ -131,6 +131,9 @@ public class RasterizerImage {
 		return cm;
 	}
 	
+	public BufferedImage getOriginalImage() {
+		return originalImage;
+	}
 	
 	public int getPixelValue (int x, int y,int color) {
 		if (rasterImage == null) return 0;
